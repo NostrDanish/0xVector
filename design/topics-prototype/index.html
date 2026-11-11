@@ -1,0 +1,2457 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="vector">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>0xVector — Topics · nostr-live prototype v5</title>
+<script src="./vendor/qrcode-generator.js"></script>
+<style>
+/* ================================================================
+   0xVector v5 — Telegram-grade motion · CRT-phosphor hacker craft
+   · spring physics everywhere · swipe-reply · hold-to-record
+   · boot sequence · glitch brand · matrix idle · notched panels
+   · same real nostr/Concord pipeline (NIP-44 gift wraps, HKDF
+   channel keys, live relays, NIP-34 projects, 6 themes).
+   ================================================================ */
+
+/* ---------- motion tokens ---------- */
+:root{
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --spring-soft:cubic-bezier(.22,1.2,.36,1);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --ease-in:cubic-bezier(.5,0,.75,0);
+  --t-fast:.14s; --t-med:.24s; --t-slow:.42s;
+  --notch:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px);
+  --notch-sm:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px);
+}
+
+/* ---------- Vector (default) — phosphor mint on void ---------- */
+:root, [data-theme="vector"]{
+  --bg-0:#030303; --bg-1:#0a0a0a; --bg-2:#141414; --bg-3:#1d1d1d;
+  --hover:#ffffff09; --hover-2:#ffffff12;
+  --active:#33db9822; --active-edge:#33DB98;
+  --bubble-in:#161616; --bubble-out:#0e2c1e;
+  --primary:#33DB98; --accent:#59FCB3; --accent2:#00d4ff; --danger:#FF2EA9;
+  --grad:linear-gradient(90deg,#33db98,#00ff9d);
+  --on-primary:#03170e;
+  --text-1:#f5f5f5; --text-2:#8f8f8f; --text-3:#5c5c5c;
+  --badge:#33DB98; --badge-text:#03170e; --badge-muted:#3a3a3a;
+  --divider:#000000; --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --glow:rgba(51,219,152,.55); --glow-soft:rgba(51,219,152,.16);
+  --rain:rgba(51,219,152,.8);
+}
+[data-theme="satoshi"]{
+  --active:#f7931a22; --active-edge:#F7931A; --bubble-out:#2e1e08;
+  --primary:#F7931A; --accent:#F9AA4B; --accent2:#ffd08a; --danger:#FF2EA9;
+  --grad:linear-gradient(90deg,#F7931A,#B56C12); --on-primary:#1a0e00;
+  --badge:#F7931A; --badge-text:#1a0e00;
+  --glow:rgba(247,147,26,.55); --glow-soft:rgba(247,147,26,.16); --rain:rgba(247,147,26,.8);
+}
+[data-theme="monero"]{
+  --active:#ff660022; --active-edge:#FF6600; --bubble-out:#331504;
+  --primary:#FF6600; --accent:#FF8E43; --accent2:#ffb37a; --danger:#FF2EA9;
+  --grad:linear-gradient(90deg,#FF6600,#FF6600); --on-primary:#1a0b00;
+  --badge:#FF6600; --badge-text:#fff;
+  --glow:rgba(255,102,0,.55); --glow-soft:rgba(255,102,0,.16); --rain:rgba(255,102,0,.8);
+}
+[data-theme="cyberpunk"]{
+  --active:#59fcf422; --active-edge:#59FCF4; --bubble-out:#08282b;
+  --primary:#59FCF4; --accent:#59FCF4; --accent2:#FC59AD; --danger:#FC59AD;
+  --grad:linear-gradient(90deg,#59FCF4,#FC59AD); --on-primary:#00211f;
+  --badge:#59FCF4; --badge-text:#00211f;
+  --glow:rgba(89,252,244,.55); --glow-soft:rgba(89,252,244,.16); --rain:rgba(89,252,244,.8);
+}
+/* ---------- Armada "Corsair" — hacker-privateer on the virtual sea ---------- */
+[data-theme="armada"]{
+  --bg-0:#17131f; --bg-1:#1c1726; --bg-2:#241d31; --bg-3:#2b2338;
+  --hover:#ffffff07; --hover-2:#ffffff0e;
+  --active:#f45b9d26; --active-edge:#F45B9D;
+  --bubble-in:#241d31; --bubble-out:#3d1730;
+  --primary:#F45B9D; --accent:#F98FC0; --accent2:#59FCF4; --danger:#FC59AD;
+  --grad:linear-gradient(90deg,#F45B9D,#59FCF4); --on-primary:#2a0416;
+  --text-1:#f4ede4; --text-2:#9b8fa8; --text-3:#6b5f78;
+  --badge:#F45B9D; --badge-text:#2a0416; --badge-muted:#3a3244;
+  --divider:#120e18;
+  --glow:rgba(244,91,157,.55); --glow-soft:rgba(244,91,157,.16); --rain:rgba(244,91,157,.8);
+}
+/* ---------- Terminal — strict monochrome phosphor CRT ---------- */
+[data-theme="terminal"]{
+  --bg-0:#000000; --bg-1:#050805; --bg-2:#0a0f0a; --bg-3:#101810;
+  --hover:#00f48e10; --hover-2:#00f48e1a;
+  --active:#00f48e1a; --active-edge:#00F48E;
+  --bubble-in:#0a120c; --bubble-out:#062b18;
+  --primary:#00F48E; --accent:#00FF3C; --accent2:#00F48E; --danger:#ff3355;
+  --grad:linear-gradient(90deg,#00F48E,#00FF3C); --on-primary:#00160b;
+  --text-1:#d8ffe9; --text-2:#6fae8c; --text-3:#3d6b52;
+  --badge:#00F48E; --badge-text:#00160b; --badge-muted:#123322;
+  --divider:#021007;
+  --glow:rgba(0,244,142,.6); --glow-soft:rgba(0,244,142,.14); --rain:rgba(0,244,142,.85);
+}
+[data-theme="terminal"] body{font-family:var(--mono)}
+[data-theme="terminal"] .brand-name,
+[data-theme="terminal"] .g-name,
+[data-theme="terminal"] .crumb-t,
+[data-theme="terminal"] .r-name,
+[data-theme="terminal"] .t-name{text-shadow:0 0 8px var(--glow)}
+[data-theme="terminal"] .bub{box-shadow:inset 0 0 0 1px #00f48e22}
+
+/* ---------- reset / base ---------- */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg-0); color:var(--text-1); overflow:hidden;
+  transition:background var(--t-med) var(--ease-out), color var(--t-med) var(--ease-out);
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,textarea{font:inherit;color:inherit}
+::selection{background:var(--primary);color:var(--on-primary)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:1px;border-radius:4px}
+
+/* custom neon scrollbars */
+.scr{overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--bg-3) transparent;overscroll-behavior:contain}
+.scr::-webkit-scrollbar{width:5px}
+.scr::-webkit-scrollbar-thumb{background:var(--bg-3);border-radius:3px;transition:background var(--t-fast)}
+.scr:hover::-webkit-scrollbar-thumb{background:var(--primary)}
+[data-theme="terminal"] .scr::-webkit-scrollbar-thumb{box-shadow:0 0 6px var(--glow)}
+
+/* ---------- ambient CRT stack (fixed, pointer-transparent) ---------- */
+#fx{position:fixed;inset:0;pointer-events:none;z-index:0}
+#fx .grid{position:absolute;inset:-2px;opacity:.5;
+  background:
+    linear-gradient(var(--glow-soft) 1px,transparent 1px) 0 0/100% 56px,
+    linear-gradient(90deg,var(--glow-soft) 1px,transparent 1px) 0 0/56px 100%;
+  mask-image:radial-gradient(120% 90% at 50% 0%,#000 30%,transparent 78%);
+  -webkit-mask-image:radial-gradient(120% 90% at 50% 0%,#000 30%,transparent 78%);
+}
+#fx .aurora{position:absolute;inset:0;opacity:.5;filter:blur(2px)}
+#fx .aurora i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.16;animation:drift 26s ease-in-out infinite alternate}
+#fx .aurora i:nth-child(1){width:44vw;height:44vw;left:-12vw;top:-18vh;background:var(--primary)}
+#fx .aurora i:nth-child(2){width:36vw;height:36vw;right:-10vw;bottom:-16vh;background:var(--accent2);animation-delay:-13s}
+@keyframes drift{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(6vw,4vh,0) scale(1.15)}}
+#fx .scan{position:absolute;inset:0;opacity:.05;mix-blend-mode:overlay;
+  background:repeating-linear-gradient(0deg,#fff 0 1px,transparent 1px 3px)}
+[data-theme="terminal"] #fx .scan{opacity:.09;mix-blend-mode:normal;background:repeating-linear-gradient(0deg,#0f02 0 1px,transparent 1px 3px)}
+#fx .vig{position:absolute;inset:0;background:radial-gradient(130% 110% at 50% 40%,transparent 55%,rgba(0,0,0,.5))}
+#fx .flicker{position:absolute;inset:0;background:#fff;opacity:0;animation:flick 9s steps(1) infinite}
+@keyframes flick{0%,100%{opacity:0}93.9%{opacity:0}94%{opacity:.015}94.2%{opacity:0}97%{opacity:.008}97.1%{opacity:0}}
+
+/* ---------- boot sequence ---------- */
+#boot{position:fixed;inset:0;z-index:200;background:#000;display:flex;align-items:center;justify-content:center;
+  transition:opacity .5s var(--ease-out),visibility .5s}
+#boot.done{opacity:0;visibility:hidden}
+#boot .term{width:min(520px,88vw);font-family:var(--mono);color:#00F48E;text-shadow:0 0 8px rgba(0,244,142,.6)}
+#boot .b-logo{font-size:13px;letter-spacing:.35em;color:#7dffb9;margin-bottom:18px;white-space:pre;line-height:1.3}
+#boot .b-lines{min-height:150px;font-size:12.5px;line-height:1.9}
+#boot .b-lines .ln{white-space:pre-wrap;word-break:break-all}
+#boot .b-lines .ok{color:#5c8f74}
+#boot .cursor{display:inline-block;width:8px;height:14px;background:#00F48E;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+#boot .b-bar{height:3px;background:#062;margin-top:16px;position:relative;overflow:hidden}
+#boot .b-bar i{position:absolute;inset:0;background:var(--grad,#00F48E);transform-origin:left;transform:scaleX(0);transition:transform .2s linear;box-shadow:0 0 12px #00F48E}
+#boot .b-skip{margin-top:14px;font-size:10px;color:#3d6b52;letter-spacing:.2em}
+
+/* ---------- app frame ---------- */
+#app{position:relative;z-index:1;display:grid;grid-template-columns:340px 300px 1fr;height:100dvh;opacity:0}
+#app.ready{opacity:1;transition:opacity .3s}
+#chats-col,#topics-col{position:relative;background:var(--bg-1);border-right:1px solid var(--divider);display:flex;flex-direction:column;min-height:0;
+  transition:background var(--t-med) var(--ease-out)}
+#convo-col{position:relative;display:flex;flex-direction:column;min-width:0;background:var(--bg-0)}
+#app.ready #chats-col{animation:colIn .5s var(--ease-out) both}
+#app.ready #topics-col{animation:colIn .5s var(--ease-out) .07s both}
+#app.ready #convo-col{animation:colIn2 .5s var(--ease-out) .12s both}
+@keyframes colIn{from{opacity:0;transform:translateX(-18px)}to{opacity:1;transform:none}}
+@keyframes colIn2{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+
+/* ---------- ripple ---------- */
+.rip-host{position:relative;overflow:hidden}
+.ripple{position:absolute;border-radius:50%;background:currentColor;opacity:.14;transform:scale(0);pointer-events:none;
+  animation:rip .5s var(--ease-out) forwards}
+@keyframes rip{to{transform:scale(1);opacity:0}}
+
+/* ---------- COL 1 · brand / search / tabs / priv strip ---------- */
+.brand{display:flex;align-items:center;gap:10px;padding:10px 12px 8px}
+.brand-mark{font-family:var(--mono);font-weight:700;font-size:15px;color:var(--on-primary);
+  background:var(--grad);padding:4px 7px;clip-path:var(--notch-sm);text-shadow:none;
+  box-shadow:0 0 18px var(--glow);user-select:none}
+.brand-name{font-family:var(--mono);font-weight:700;font-size:16px;letter-spacing:.06em}
+.brand-name span{color:var(--primary);text-shadow:0 0 12px var(--glow)}
+.ibtn{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;color:var(--text-2);flex:none;
+  transition:background var(--t-fast),color var(--t-fast),transform var(--t-fast) var(--spring)}
+.ibtn:hover{background:var(--hover-2);color:var(--text-1)}
+.ibtn:active{transform:scale(.88)}
+.ibtn.glow-on{color:var(--primary);text-shadow:0 0 10px var(--glow)}
+.theme-dots{margin-left:auto;display:flex;gap:6px}
+.theme-dots i{width:11px;height:11px;border-radius:50%;cursor:pointer;opacity:.5;transition:transform var(--t-fast) var(--spring),opacity var(--t-fast),box-shadow var(--t-fast)}
+.theme-dots i:hover{transform:scale(1.35);opacity:1}
+.theme-dots i.on{opacity:1;box-shadow:0 0 0 2px var(--bg-1),0 0 0 3.5px currentColor,0 0 10px currentColor;transform:scale(1.15)}
+.search-wrap{padding:2px 12px 8px}
+.search{width:100%;background:var(--bg-2);border:1px solid transparent;border-radius:11px;padding:9px 14px;font-size:13.5px;
+  transition:border-color var(--t-fast),box-shadow var(--t-fast),background var(--t-med)}
+.search::placeholder{color:var(--text-3)}
+.search:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--glow-soft),0 0 18px -4px var(--glow)}
+.tabs{display:flex;gap:4px;padding:0 12px 8px;position:relative}
+.tab{flex:1;padding:7px 4px;font-size:12.5px;font-weight:600;color:var(--text-3);border-radius:9px;position:relative;z-index:1;
+  transition:color var(--t-fast)}
+.tab:hover{color:var(--text-1)}
+.tab.on{color:var(--primary)}
+.tab-ind{position:absolute;bottom:6px;height:26px;border-radius:9px;background:var(--active);box-shadow:inset 0 0 0 1px var(--active-edge);
+  transition:left var(--t-med) var(--spring),width var(--t-med) var(--spring)}
+.priv-strip{display:flex;align-items:center;gap:7px;margin:0 12px 8px;padding:7px 11px;border-radius:9px;cursor:pointer;
+  background:var(--active);font-family:var(--mono);font-size:10.5px;color:var(--primary);letter-spacing:.02em;
+  transition:box-shadow var(--t-fast),transform var(--t-fast) var(--spring)}
+.priv-strip:hover{box-shadow:0 0 16px -2px var(--glow-soft),inset 0 0 0 1px var(--active-edge)}
+.priv-strip:active{transform:scale(.98)}
+.priv-strip .dot{width:7px;height:7px;border-radius:50%;background:var(--primary);box-shadow:0 0 8px var(--glow);animation:pulse 2.4s infinite;flex:none}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.priv-strip .relay-dots{margin-left:auto;display:flex;gap:4px}
+.priv-strip .relay-dots i{width:6px;height:6px;border-radius:50%;background:var(--badge-muted);transition:background var(--t-med),box-shadow var(--t-med)}
+.priv-strip .relay-dots i.on{background:var(--primary);box-shadow:0 0 6px var(--glow)}
+
+/* ---------- chat rows ---------- */
+#chat-rows{flex:1;padding:0 6px 8px}
+.row{display:flex;gap:11px;padding:9px 10px;border-radius:12px;cursor:pointer;position:relative;align-items:center;
+  transition:background var(--t-fast);content-visibility:auto;contain-intrinsic-size:auto 62px}
+.row:hover{background:var(--hover)}
+.row.on{background:var(--active)}
+.row.on::before{content:'';position:absolute;left:0;top:22%;bottom:22%;width:3px;border-radius:2px;background:var(--active-edge);box-shadow:0 0 10px var(--glow)}
+.row-in{animation:rowIn .4s var(--ease-out) both}
+@keyframes rowIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.av{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:18px;color:#fff;flex:none;position:relative;user-select:none}
+.av.sm{width:40px;height:40px;font-size:15px}
+.av .pres{position:absolute;right:0;bottom:0;width:12px;height:12px;border-radius:50%;background:var(--primary);border:2.5px solid var(--bg-1);box-shadow:0 0 8px var(--glow)}
+.r-main{flex:1;min-width:0}
+.r-top{display:flex;align-items:baseline;gap:6px}
+.r-name{font-weight:600;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.r-time{font-size:11px;color:var(--text-3);flex:none;font-family:var(--mono)}
+.r-time.unread{color:var(--primary)}
+.r-bottom{display:flex;align-items:center;gap:6px;margin-top:1px}
+.r-sub{font-size:12.5px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1}
+.r-sub .sndr{color:var(--primary)}
+.badge{min-width:19px;height:19px;padding:0 5.5px;border-radius:10px;background:var(--badge);color:var(--badge-text);
+  font-size:11px;font-weight:700;display:grid;place-items:center;flex:none;
+  transition:transform var(--t-med) var(--spring),opacity var(--t-med),background var(--t-fast)}
+.badge.mut{background:var(--badge-muted);color:var(--text-2)}
+.badge.clear{transform:scale(0);opacity:0}
+.badge.pop{animation:badgePop .45s var(--spring)}
+@keyframes badgePop{0%{transform:scale(.3)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+.r-ico{width:14px;height:14px;color:var(--text-3);flex:none}
+.r-ico svg{width:100%;height:100%;display:block}
+.row .ticks{width:15px;height:15px;color:var(--primary);flex:none}
+
+/* ---------- COL 2 · topics ---------- */
+.tp-head{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--divider)}
+.g-name{font-weight:700;font-size:15px}
+.g-sub{font-size:11.5px;color:var(--text-2);font-family:var(--mono)}
+.tp-icos{margin-left:auto;display:flex;gap:1px}
+.tp-actions{display:flex;gap:8px;padding:10px 12px 8px}
+.new-topic{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:9px;border-radius:10px;
+  background:var(--active);color:var(--primary);font-weight:700;font-size:12.5px;letter-spacing:.03em;
+  transition:box-shadow var(--t-fast),transform var(--t-fast) var(--spring),background var(--t-fast)}
+.new-topic:hover{box-shadow:0 0 18px -2px var(--glow-soft),inset 0 0 0 1px var(--active-edge)}
+.new-topic:active{transform:scale(.97)}
+.proj-btn{width:40px;border-radius:10px;background:var(--bg-2);color:var(--accent2);display:grid;place-items:center;
+  transition:box-shadow var(--t-fast),transform var(--t-fast) var(--spring)}
+.proj-btn:hover{box-shadow:inset 0 0 0 1px var(--accent2),0 0 14px -4px var(--accent2)}
+.proj-btn:active{transform:scale(.94)}
+#topic-rows{flex:1;padding:0 6px 8px}
+.t-row{display:flex;gap:10px;padding:8px 10px;border-radius:12px;cursor:pointer;align-items:center;position:relative;
+  transition:background var(--t-fast);content-visibility:auto;contain-intrinsic-size:auto 46px}
+.t-row:hover{background:var(--hover)}
+.t-row.on{background:var(--active)}
+.t-row.on::before{content:'';position:absolute;left:0;top:22%;bottom:22%;width:3px;border-radius:2px;background:var(--active-edge);box-shadow:0 0 10px var(--glow)}
+.t-ic{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:15px;flex:none;color:#fff;position:relative}
+.t-ic .ty{position:absolute;right:-2px;bottom:-2px;font-size:9px;filter:drop-shadow(0 1px 2px #0008)}
+.t-name{font-weight:600;font-size:13.5px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-name.closed{color:var(--text-3);text-decoration:line-through}
+.t-sub{font-size:11.5px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.t-sub .sndr{color:var(--primary)}
+.t-sec{font-family:var(--mono);font-size:9.5px;letter-spacing:.25em;color:var(--text-3);padding:12px 14px 4px;text-transform:uppercase}
+.t-sec::after{content:'';display:block;height:1px;margin-top:4px;background:linear-gradient(90deg,var(--active-edge),transparent);opacity:.35}
+.mobile-only{display:none!important}
+</style>
+<style>
+/* ---------- COL 3 · conversation header ---------- */
+.cv-head{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--divider);
+  background:color-mix(in srgb,var(--bg-1) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  position:relative;z-index:5;transition:box-shadow var(--t-med)}
+.cv-head.scrolled{box-shadow:0 8px 24px -12px #000c,0 1px 0 var(--glow-soft)}
+.crumbs{cursor:default;min-width:0}
+.crumb-g{font-weight:700;font-size:14px;color:var(--text-2)}
+.crumb-sep{color:var(--text-3);font-family:var(--mono)}
+.crumb-t{font-weight:700;font-size:14.5px}
+.ann-chip{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;background:var(--grad);color:var(--on-primary);
+  padding:2.5px 7px;clip-path:var(--notch-sm);font-weight:700}
+.cv-sub{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-2);margin-top:1px;font-family:var(--mono)}
+.e2e{display:inline-flex;align-items:center;gap:3.5px;color:var(--primary);font-size:9.5px;letter-spacing:.06em;text-shadow:0 0 8px var(--glow-soft)}
+#ttl-chip{cursor:pointer;padding:1px 7px;border-radius:8px;transition:background var(--t-fast),color var(--t-fast)}
+#ttl-chip:hover{background:var(--hover-2)}
+#ttl-chip.on{color:var(--danger)}
+.cv-search{width:0;overflow:hidden;transition:width var(--t-med) var(--spring-soft);margin-left:auto}
+.cv-search.open{width:min(240px,30vw)}
+.cv-search input{width:100%;background:var(--bg-2);border:1px solid transparent;border-radius:9px;padding:6.5px 11px;font-size:12.5px}
+.cv-search input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--glow-soft)}
+.cv-icos{display:flex;gap:1px;margin-left:auto}
+.cv-search.open~.cv-icos{margin-left:0}
+
+/* ---------- voice bar / pins bar ---------- */
+#voice-bar,#pins-bar{display:none;align-items:center;gap:10px;padding:7px 14px;font-size:12px;
+  border-bottom:1px solid var(--divider);background:var(--bg-1)}
+#voice-bar.open,#pins-bar.open{display:flex;animation:barIn .35s var(--spring-soft) both}
+@keyframes barIn{from{opacity:0;transform:translateY(-100%)}to{opacity:1;transform:none}}
+.voice-live{width:26px;height:26px;border-radius:50%;background:var(--active);display:grid;place-items:center;flex:none}
+.vbar{display:flex;align-items:flex-end;gap:1.8px;height:11px}
+.vbar i{width:2.4px;background:var(--primary);border-radius:1px;animation:vlive 1s ease-in-out infinite;box-shadow:0 0 5px var(--glow)}
+.vbar i:nth-child(2){animation-delay:.18s}.vbar i:nth-child(3){animation-delay:.36s}
+@keyframes vlive{0%,100%{height:4px}50%{height:11px}}
+.vn{font-weight:700;font-size:12.5px}
+.vs{color:var(--text-2);font-size:11px;font-family:var(--mono);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.join-btn{background:var(--grad);color:var(--on-primary);font-weight:700;font-size:11.5px;padding:6px 16px;border-radius:14px;
+  clip-path:var(--notch-sm);box-shadow:0 0 14px -3px var(--glow);transition:transform var(--t-fast) var(--spring),box-shadow var(--t-fast)}
+.join-btn:hover{transform:scale(1.06);box-shadow:0 0 22px -2px var(--glow)}
+.join-btn:active{transform:scale(.94)}
+.join-btn.joined{background:var(--bg-3);color:var(--danger);box-shadow:none;clip-path:var(--notch-sm)}
+#pins-bar{cursor:pointer;transition:background var(--t-fast)}
+#pins-bar:hover{background:var(--hover)}
+#pins-bar .pl{width:2.5px;align-self:stretch;border-radius:2px;background:var(--grad);box-shadow:0 0 8px var(--glow);flex:none}
+#pins-bar .pn{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--primary)}
+#pins-bar .px{font-size:12px;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60vw}
+#pins-bar .pn2{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--text-3);flex:none}
+
+/* ---------- messages ---------- */
+#msgs{flex:1;padding:14px 0 10px;scroll-behavior:smooth;display:flex;flex-direction:column}
+#msgs.instant{scroll-behavior:auto}
+.mwrap{max-width:min(720px,92%);margin:auto auto 0;padding:0 16px;width:100%}
+.day-dv{display:flex;justify-content:center;margin:14px 0 8px;position:sticky;top:6px;z-index:3}
+.day-dv span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--text-2);background:color-mix(in srgb,var(--bg-1) 88%,transparent);
+  padding:4px 13px;border-radius:12px;backdrop-filter:blur(8px);box-shadow:0 2px 10px #0006}
+.new-dv{display:flex;align-items:center;gap:10px;margin:10px 0 6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--primary)}
+.new-dv::before,.new-dv::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--active-edge),transparent);box-shadow:0 0 6px var(--glow-soft)}
+.svc{display:flex;justify-content:center;margin:7px 0}
+.svc span{font-size:11px;color:var(--text-2);background:var(--bg-1);padding:4px 12px;border-radius:11px;font-family:var(--mono);max-width:80%;text-align:center}
+.msg{display:flex;margin:1.5px 0;position:relative}
+.msg.out{justify-content:flex-end}
+.msg .mav{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;color:#fff;flex:none;align-self:flex-end;margin-right:7px;user-select:none}
+.msg .mav.ghost{visibility:hidden}
+.bub{position:relative;max-width:min(460px,78%);padding:7px 11px 6px;border-radius:14px;font-size:13.8px;line-height:1.42;
+  word-wrap:break-word;transition:filter var(--t-fast);will-change:transform;contain:layout style}
+.msg.in .bub{background:var(--bubble-in);border-bottom-left-radius:14px}
+.msg.out .bub{background:var(--bubble-out);border-bottom-right-radius:14px}
+.msg.last.in .bub{border-bottom-left-radius:5px}
+.msg.last.out .bub{border-bottom-right-radius:5px}
+.msg.last.in .bub::after,.msg.last.out .bub::after{content:'';position:absolute;bottom:0;width:9px;height:13px}
+.msg.last.in .bub::after{left:-8px;background:var(--bubble-in);clip-path:path('M9 0 C 5 5 2 9 0 13 L 9 13 Z')}
+.msg.last.out .bub::after{right:-8px;background:var(--bubble-out);clip-path:path('M0 0 C 4 5 7 9 9 13 L 0 13 Z')}
+.bub:hover{filter:brightness(1.12)}
+.msg-in-anim{animation:bubIn .38s var(--spring) both}
+@keyframes bubIn{from{opacity:0;transform:translateY(10px) scale(.94)}to{opacity:1;transform:none}}
+.msg-out-anim{animation:bubOut .4s var(--spring) both;transform-origin:bottom right}
+@keyframes bubOut{from{opacity:0;transform:translateY(14px) scale(.7)}to{opacity:1;transform:none}}
+.author{font-size:12px;font-weight:700;margin-bottom:2px}
+.a0{color:#4e8ac1}.a1{color:#c1554e}.a2{color:#4ea15b}.a3{color:#6b4f9e}.a4{color:#c19a4e}.a5{color:#b0547d}
+.bub .rq{border-left:2.5px solid var(--primary);padding:2px 8px;margin-bottom:4px;background:#ffffff08;border-radius:0 8px 8px 0;cursor:pointer}
+.bub .rq .ra{font-size:11.5px;font-weight:700;color:var(--primary)}
+.bub .rq .rx{font-size:12px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:320px}
+.meta{float:right;display:inline-flex;align-items:center;gap:3px;font-size:10px;color:var(--text-3);margin:7px 0 0 9px;font-family:var(--mono);user-select:none}
+.meta .ticks{width:14px;height:14px;color:var(--text-3);transition:color var(--t-med)}
+.meta .ticks.st-sent{color:var(--text-2)}
+.meta .ticks.st-ack{color:var(--primary);filter:drop-shadow(0 0 3px var(--glow))}
+.meta .st-clock{width:11px;height:11px;animation:spin 1.4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.relay-ok{color:var(--accent2);font-size:10px}
+.edited{font-style:normal}
+mark{background:var(--active-edge);color:var(--on-primary);border-radius:3px;padding:0 1px}
+/* hover tools */
+.htool{position:absolute;top:-15px;display:flex;gap:2px;background:var(--bg-2);border-radius:11px;padding:3px;
+  opacity:0;pointer-events:none;transform:translateY(5px) scale(.9);transition:opacity var(--t-fast),transform var(--t-fast) var(--spring);
+  box-shadow:0 6px 20px #000a,inset 0 0 0 1px #ffffff12;z-index:4}
+.msg.in .htool{right:8px}.msg.out .htool{left:8px}
+.msg:hover .htool{opacity:1;pointer-events:auto;transform:none}
+.htool button{width:27px;height:27px;border-radius:8px;display:grid;place-items:center;font-size:13.5px;color:var(--text-2);
+  transition:background var(--t-fast),transform var(--t-fast) var(--spring)}
+.htool button:hover{background:var(--hover-2);transform:scale(1.18)}
+/* swipe-reply hint */
+.sw-hint{position:absolute;top:50%;transform:translateY(-50%) scale(0);width:30px;height:30px;border-radius:50%;
+  background:var(--active);color:var(--primary);display:grid;place-items:center;transition:transform var(--t-fast) var(--spring);box-shadow:0 0 12px var(--glow-soft)}
+.msg.in .sw-hint{left:-40px}.msg.out .sw-hint{right:-40px}
+.msg .bub{touch-action:pan-y}
+/* reactions */
+.rx-row{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.rx{display:inline-flex;align-items:center;gap:4px;background:#ffffff0a;border:1px solid transparent;border-radius:11px;
+  padding:2px 8px;font-size:12.5px;cursor:pointer;transition:transform var(--t-fast) var(--spring),background var(--t-fast),border-color var(--t-fast)}
+.rx:hover{transform:scale(1.12)}
+.rx.mine{background:var(--active);border-color:var(--active-edge)}
+.rx .n{font-size:10.5px;color:var(--text-2);font-family:var(--mono)}
+.rx.mine .n{color:var(--primary)}
+.rx.pop{animation:rxPop .4s var(--spring)}
+@keyframes rxPop{0%{transform:scale(.2)}55%{transform:scale(1.35)}100%{transform:scale(1)}}
+.fly-rx{position:fixed;font-size:26px;z-index:90;pointer-events:none;animation:flyUp .9s var(--ease-out) forwards}
+@keyframes flyUp{0%{transform:translateY(0) scale(.4);opacity:0}18%{opacity:1;transform:translateY(-14px) scale(1.3)}
+  100%{transform:translateY(-90px) scale(.9);opacity:0}}
+/* voice bubble */
+.vmsg{display:flex;align-items:center;gap:9px;min-width:210px}
+.vplay{width:34px;height:34px;border-radius:50%;background:var(--primary);color:var(--on-primary);display:grid;place-items:center;flex:none;
+  transition:transform var(--t-fast) var(--spring),box-shadow var(--t-fast);box-shadow:0 0 12px -2px var(--glow)}
+.vplay:hover{transform:scale(1.1)}
+.vwave{display:flex;align-items:center;gap:2px;height:26px;flex:1}
+.vwave i{width:2.6px;border-radius:2px;background:var(--text-3);transition:background .1s}
+.vwave i.pl{background:var(--primary);box-shadow:0 0 4px var(--glow-soft)}
+.vt-time{font-family:var(--mono);font-size:10.5px;color:var(--text-2);flex:none}
+.vt-btn{font-size:10.5px;color:var(--accent2);font-family:var(--mono);margin-top:5px;display:inline-block;cursor:pointer;letter-spacing:.05em}
+.vt-btn:hover{text-shadow:0 0 8px var(--accent2)}
+.vt{display:none;font-size:12.5px;color:var(--text-2);margin-top:4px;border-left:2px solid var(--accent2);padding-left:8px;font-family:var(--mono)}
+.vt.open{display:block;animation:rowIn .3s var(--ease-out)}
+/* link preview */
+.lp{display:flex;gap:9px;margin-top:5px;background:#ffffff07;border-left:2.5px solid var(--accent2);border-radius:0 9px 9px 0;padding:7px 10px;cursor:pointer}
+.lp .lt{font-size:12.5px;font-weight:700;color:var(--accent2)}
+.lp .ld{font-size:11.5px;color:var(--text-2);margin-top:1px}
+.imgbub{width:280px;height:170px;border-radius:10px;margin-bottom:5px;position:relative;overflow:hidden;cursor:zoom-in;
+  background:linear-gradient(135deg,#1a2f26,#0c1a2f);display:grid;place-items:center;transition:transform var(--t-med) var(--spring)}
+.imgbub:hover{transform:scale(1.02)}
+.imgbub .hexpat{position:absolute;inset:0;opacity:.25;
+  background:radial-gradient(circle at 30% 40%,var(--primary) 0 2px,transparent 2.5px) 0 0/26px 26px,
+             radial-gradient(circle at 70% 60%,var(--accent2) 0 1.5px,transparent 2px) 13px 13px/26px 26px}
+.imgbub .cap{font-family:var(--mono);font-size:10px;color:var(--text-2);letter-spacing:.1em;z-index:1}
+/* typing bubble */
+.typing{display:inline-flex;gap:4.5px;padding:11px 15px;align-items:center}
+.typing i{width:6.5px;height:6.5px;border-radius:50%;background:var(--text-2);animation:tp 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.16s}.typing i:nth-child(3){animation-delay:.32s}
+@keyframes tp{0%,60%,100%{transform:none;opacity:.4}30%{transform:translateY(-5px);opacity:1}}
+/* empty state */
+#convo-empty{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:2}
+#rain{position:absolute;inset:0;opacity:.16}
+.empty-logo{font-family:var(--mono);font-weight:700;font-size:52px;color:var(--primary);position:relative;user-select:none;
+  text-shadow:0 0 30px var(--glow),0 0 80px var(--glow-soft);animation:float 5s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.empty-logo::before,.empty-logo::after{content:'0x';position:absolute;inset:0;opacity:0}
+.empty-logo:hover::before{opacity:.7;color:var(--accent2);animation:gl1 .3s steps(2) infinite}
+.empty-logo:hover::after{opacity:.7;color:var(--danger);animation:gl2 .3s steps(2) infinite}
+@keyframes gl1{0%{transform:translate(-3px,1px)}50%{transform:translate(2px,-2px)}100%{transform:translate(-1px,2px)}}
+@keyframes gl2{0%{transform:translate(3px,-1px)}50%{transform:translate(-2px,2px)}100%{transform:translate(1px,-2px)}}
+.empty-hint{font-size:13px;color:var(--text-2);text-align:center;max-width:340px}
+.empty-hint b{color:var(--primary)}
+.empty-feats{display:flex;flex-direction:column;gap:6px;margin-top:6px}
+.feat{font-family:var(--mono);font-size:11px;color:var(--text-3);display:flex;gap:8px;align-items:center}
+.feat i{color:var(--primary);font-style:normal;text-shadow:0 0 8px var(--glow)}
+#convo-live{position:absolute;inset:0;display:none;flex-direction:column;z-index:2}
+#convo-live.open{display:flex}
+/* FAB */
+#fab{position:absolute;right:20px;bottom:86px;width:44px;height:44px;border-radius:50%;background:var(--bg-2);color:var(--text-1);
+  display:grid;place-items:center;box-shadow:0 6px 22px #000b,inset 0 0 0 1px #ffffff14;opacity:0;pointer-events:none;
+  transform:translateY(14px) scale(.85);transition:opacity var(--t-med),transform var(--t-med) var(--spring);z-index:6}
+#fab.show{opacity:1;pointer-events:auto;transform:none}
+#fab:hover{box-shadow:0 6px 22px #000b,0 0 16px var(--glow-soft),inset 0 0 0 1px var(--active-edge)}
+#fab .fb-badge{position:absolute;top:-5px;right:-5px;min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:var(--badge);
+  color:var(--badge-text);font-size:10.5px;font-weight:700;display:grid;place-items:center;box-shadow:0 0 10px var(--glow)}
+</style>
+<style>
+/* ---------- composer ---------- */
+#composer{position:relative;padding:8px 14px 12px;display:flex;align-items:flex-end;gap:9px;z-index:7}
+.cbox{flex:1;background:var(--bg-1);border-radius:16px;border:1px solid var(--divider);position:relative;
+  transition:border-color var(--t-fast),box-shadow var(--t-fast)}
+.cbox:focus-within{border-color:var(--active-edge);box-shadow:0 0 0 3px var(--glow-soft),0 0 24px -6px var(--glow)}
+.cbox-reply{display:none;padding:8px 12px 0;align-items:flex-start;gap:8px}
+.cbox-reply.open{display:flex;animation:barIn .3s var(--spring-soft)}
+.cbox-reply .rq{flex:1;border-left:2.5px solid var(--primary);padding:2px 9px;min-width:0}
+.cbox-reply .ra{font-size:11.5px;font-weight:700;color:var(--primary)}
+.cbox-reply .rx{font-size:12px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cbox-reply .e-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.16em;color:var(--danger);display:none;margin-bottom:2px}
+.cbox-reply.edit-mode .e-lbl{display:block}
+#cp-reply-x-btn{color:var(--text-3);font-size:13px;padding:3px 6px;border-radius:6px;transition:color var(--t-fast),background var(--t-fast)}
+#cp-reply-x-btn:hover{color:var(--text-1);background:var(--hover-2)}
+.c-topic{display:none;font-family:var(--mono);font-size:9.5px;color:var(--text-3);padding:7px 14px 0;letter-spacing:.05em}
+.crow{display:flex;align-items:flex-end;gap:2px;padding:5px 7px}
+#cp-input{flex:1;min-width:0;background:none;border:0;resize:none;max-height:132px;padding:8px 6px;font-size:14px;line-height:1.4}
+#cp-input:focus{outline:none}
+#cp-input::placeholder{color:var(--text-3)}
+.mic-send{width:46px;height:46px;border-radius:50%;background:var(--grad);color:var(--on-primary);display:grid;place-items:center;flex:none;
+  box-shadow:0 4px 18px -4px var(--glow);transition:transform var(--t-fast) var(--spring),box-shadow var(--t-fast);user-select:none;touch-action:none}
+.mic-send:hover{transform:scale(1.08);box-shadow:0 4px 26px -2px var(--glow)}
+.mic-send:active{transform:scale(.92)}
+.mic-send svg{transition:transform var(--t-med) var(--spring),opacity var(--t-fast)}
+.mic-send.rec{animation:recPulse 1.2s infinite}
+@keyframes recPulse{0%,100%{box-shadow:0 0 0 0 var(--glow)}50%{box-shadow:0 0 0 12px transparent}}
+/* recording bar */
+#rec-bar{position:absolute;inset:0;display:none;align-items:center;gap:11px;background:var(--bg-1);border-radius:16px;
+  border:1px solid var(--danger);padding:0 16px;box-shadow:0 0 24px -6px var(--danger)}
+#rec-bar.open{display:flex;animation:barIn .25s var(--spring-soft)}
+.rec-dot{width:9px;height:9px;border-radius:50%;background:var(--danger);animation:pulse 1s infinite;flex:none;box-shadow:0 0 8px var(--danger)}
+.rec-time{font-family:var(--mono);font-size:13px;font-weight:700;min-width:40px}
+.rec-wave{display:flex;align-items:center;gap:2.5px;height:26px;flex:1;overflow:hidden}
+.rec-wave i{width:2.6px;border-radius:2px;background:var(--danger);opacity:.75}
+.rec-hint{font-family:var(--mono);font-size:9.5px;color:var(--text-3);letter-spacing:.14em;white-space:nowrap}
+#rec-bar.cancel .rec-hint{color:var(--danger)}
+/* popovers */
+.pop{position:absolute;bottom:calc(100% + 8px);right:0;background:var(--bg-2);clip-path:var(--notch);padding:10px;z-index:20;
+  opacity:0;pointer-events:none;transform:translateY(10px) scale(.92);transform-origin:bottom right;
+  transition:opacity var(--t-fast),transform var(--t-fast) var(--spring);box-shadow:0 14px 44px #000d,inset 0 0 0 1px #ffffff12}
+.pop.open{opacity:1;pointer-events:auto;transform:none}
+.pop-h{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--text-3);padding:2px 4px 9px;text-transform:uppercase}
+.egrid2{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;width:300px}
+.ecell{width:100%;aspect-ratio:1;display:grid;place-items:center;font-size:19px;border-radius:9px;cursor:pointer;
+  transition:background var(--t-fast),transform var(--t-fast) var(--spring)}
+.ecell:hover{background:var(--hover-2);transform:scale(1.25)}
+.slash-it{display:flex;flex-direction:column;gap:1px;padding:8px 12px;border-radius:9px;cursor:pointer;min-width:250px;transition:background var(--t-fast)}
+.slash-it:hover{background:var(--hover)}
+.slash-it .cmd{font-family:var(--mono);font-size:12.5px;font-weight:700;color:var(--primary)}
+.slash-it .ds{font-size:11.5px;color:var(--text-2)}
+
+/* ---------- context menu ---------- */
+#ctx{position:fixed;z-index:100;background:color-mix(in srgb,var(--bg-2) 94%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  clip-path:var(--notch);min-width:200px;padding:6px;opacity:0;pointer-events:none;transform:scale(.85);
+  transition:opacity var(--t-fast),transform var(--t-fast) var(--spring);box-shadow:0 18px 50px #000d,inset 0 0 0 1px #ffffff12}
+#ctx.open{opacity:1;pointer-events:auto;transform:none}
+.ctx-rx{display:flex;gap:2px;padding:3px 5px 7px;border-bottom:1px solid var(--divider);margin-bottom:5px}
+.ctx-rx button{font-size:19px;padding:4px 6px;border-radius:9px;transition:transform var(--t-fast) var(--spring),background var(--t-fast)}
+.ctx-rx button:hover{transform:scale(1.35) translateY(-3px);background:var(--hover-2)}
+.ctx-it{display:flex;align-items:center;gap:10px;width:100%;padding:8.5px 11px;border-radius:8px;font-size:13px;text-align:left;
+  transition:background var(--t-fast)}
+.ctx-it:hover{background:var(--hover)}
+.ctx-it .i{width:20px;text-align:center}
+.ctx-it.dng{color:var(--danger)}
+/* toasts */
+#toasts{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);z-index:150;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{display:flex;align-items:center;gap:8px;background:color-mix(in srgb,var(--bg-2) 92%,transparent);backdrop-filter:blur(12px);
+  clip-path:var(--notch-sm);padding:10px 18px;font-size:12.5px;font-family:var(--mono);box-shadow:0 10px 34px #000c,inset 0 0 0 1px var(--active-edge);
+  animation:toastIn .4s var(--spring) both;color:var(--primary)}
+.toast.out{animation:toastOut .3s var(--ease-in) both}
+@keyframes toastIn{from{opacity:0;transform:translateY(16px) scale(.85)}to{opacity:1;transform:none}}
+@keyframes toastOut{to{opacity:0;transform:translateY(10px) scale(.92)}}
+
+/* ---------- sheets (overview / projects / settings) ---------- */
+.sheet{position:absolute;top:0;right:0;bottom:0;width:min(400px,100%);background:var(--bg-1);border-left:1px solid var(--divider);z-index:30;
+  transform:translateX(105%);transition:transform var(--t-slow) var(--spring-soft);display:flex;flex-direction:column;box-shadow:-24px 0 60px #0009}
+.sheet.open{transform:none}
+.ov-scroll{flex:1;padding-bottom:20px}
+.ov-hero{display:flex;flex-direction:column;align-items:center;padding:26px 20px 18px;gap:9px;text-align:center}
+.ov-av{width:86px;height:86px;border-radius:50%;display:grid;place-items:center;font-size:33px;font-weight:700;color:#fff;
+  box-shadow:0 0 34px -6px var(--glow)}
+.ov-name{font-size:18px;font-weight:700}
+.ov-sub{font-size:12px;color:var(--text-2);font-family:var(--mono)}
+.ov-sec{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--text-3);padding:16px 18px 6px;text-transform:uppercase}
+.ov-row{display:flex;align-items:center;gap:13px;padding:10px 18px;cursor:pointer;transition:background var(--t-fast)}
+.ov-row:hover{background:var(--hover)}
+.ov-ic{width:34px;height:34px;border-radius:10px;background:var(--active);color:var(--primary);display:grid;place-items:center;flex:none;font-size:15px}
+.ov-row .grow{flex:1;min-width:0;font-size:13.5px;font-weight:600}
+.ov-row .sub{font-size:11.5px;color:var(--text-2);font-weight:400;font-family:var(--mono)}
+.sw{width:38px;height:22px;border-radius:12px;background:var(--bg-3);position:relative;flex:none;cursor:pointer;transition:background var(--t-med)}
+.sw::after{content:'';position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;
+  transition:transform var(--t-med) var(--spring)}
+.sw.on{background:var(--primary)}
+.sw.on::after{transform:translateX(16px)}
+.role-tag{font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;padding:2.5px 7px;clip-path:var(--notch-sm);font-weight:700}
+.role-owner{background:var(--grad);color:var(--on-primary)}
+.role-admin{background:var(--active);color:var(--primary)}
+.role-every{background:var(--bg-3);color:var(--text-2)}
+.member-stack{display:flex}
+.member-stack .mav2{width:30px;height:30px;border-radius:50%;border:2.5px solid var(--bg-1);margin-left:-9px;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff}
+.member-stack .mav2:first-child{margin-left:0}
+.ovt-row{display:flex;align-items:center;gap:10px;padding:8px 18px;cursor:pointer;transition:background var(--t-fast)}
+.ovt-row:hover{background:var(--hover)}
+.ovt-row .t-ic{width:30px;height:30px;font-size:13px}
+/* projects */
+#projects{width:min(460px,100%)}
+.pj-tabs{display:flex;gap:3px;padding:8px 12px;border-bottom:1px solid var(--divider)}
+.ptab{padding:6.5px 13px;font-size:12px;font-weight:600;color:var(--text-3);border-radius:9px;transition:color var(--t-fast),background var(--t-fast)}
+.ptab:hover{color:var(--text-1)}
+.ptab.on{color:var(--primary);background:var(--active)}
+.pj-tools{display:flex;gap:7px;padding:9px 12px;align-items:center}
+.pj-tools input{flex:1;background:var(--bg-2);border:1px solid transparent;border-radius:9px;padding:7px 11px;font-size:12.5px}
+.pj-tools input:focus{outline:none;border-color:var(--primary)}
+.pj-status{display:flex;gap:4px}
+.pj-status button{font-family:var(--mono);font-size:10px;padding:5px 9px;border-radius:8px;color:var(--text-3);transition:all var(--t-fast)}
+.pj-status button.on{background:var(--active);color:var(--primary)}
+.pj-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:4px 14px 14px}
+.pj-grid.list{grid-template-columns:1fr}
+.pj-card{background:var(--bg-2);clip-path:var(--notch);padding:13px;cursor:pointer;transition:transform var(--t-fast) var(--spring),box-shadow var(--t-fast)}
+.pj-card:hover{transform:translateY(-2px);box-shadow:0 8px 26px -8px var(--glow-soft),inset 0 0 0 1px var(--active-edge)}
+.pj-card .rn{font-family:var(--mono);font-weight:700;font-size:13px;color:var(--primary)}
+.pj-card .rd{font-size:11.5px;color:var(--text-2);margin:5px 0 9px;line-height:1.4}
+.pj-pills{display:flex;gap:5px;flex-wrap:wrap}
+.pj-pill{font-family:var(--mono);font-size:9.5px;padding:3px 8px;border-radius:8px;background:var(--bg-3);color:var(--text-2);cursor:pointer;transition:all var(--t-fast)}
+.pj-pill:hover{background:var(--active);color:var(--primary)}
+.issue{display:flex;gap:10px;padding:10px 14px;cursor:pointer;border-radius:10px;transition:background var(--t-fast);align-items:flex-start}
+.issue:hover{background:var(--hover)}
+.issue .dot2{width:8px;height:8px;border-radius:50%;margin-top:5px;flex:none}
+.issue .dot2.open{background:var(--primary);box-shadow:0 0 7px var(--glow)}
+.issue .dot2.merged{background:#a371f7}.issue .dot2.closed{background:var(--text-3)}.issue .dot2.draft{background:var(--badge-muted)}
+.issue .it{font-size:12.5px;font-weight:600;flex:1}
+.issue .im{font-family:var(--mono);font-size:10px;color:var(--text-3);margin-top:2px}
+.pj-heat{display:grid;grid-template-columns:repeat(26,1fr);gap:2.5px;padding:8px 16px 14px}
+.pj-heat i{aspect-ratio:1;border-radius:2.5px;background:var(--bg-3)}
+.pj-live-tag{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--primary);padding:12px 16px 2px;display:flex;align-items:center;gap:7px}
+.pj-live-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--primary);box-shadow:0 0 8px var(--glow);animation:pulse 2s infinite}
+</style>
+<style>
+/* ---------- drawer ---------- */
+#drawer-bg{position:fixed;inset:0;background:#000a;backdrop-filter:blur(3px);z-index:60;opacity:0;pointer-events:none;transition:opacity var(--t-med)}
+#drawer-bg.open{opacity:1;pointer-events:auto}
+#drawer{position:fixed;top:0;left:0;bottom:0;width:min(320px,86vw);background:var(--bg-1);z-index:61;transform:translateX(-105%);
+  transition:transform var(--t-slow) var(--spring-soft);display:flex;flex-direction:column;border-right:1px solid var(--divider);box-shadow:24px 0 60px #000a}
+#drawer.open{transform:none}
+.dr-id{padding:20px 18px 14px;background:linear-gradient(160deg,var(--active),transparent 70%)}
+.dr-av{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:23px;font-weight:700;color:#fff;
+  background:var(--grad);box-shadow:0 0 24px -4px var(--glow);margin-bottom:10px}
+.dr-name{font-weight:700;font-size:15.5px}
+.dr-npub{font-family:var(--mono);font-size:10.5px;color:var(--text-2);display:flex;align-items:center;gap:6px;cursor:pointer;margin-top:2px}
+.dr-npub:hover{color:var(--primary)}
+.dr-accs{display:flex;gap:8px;padding:10px 16px}
+.dr-acc{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:14px;font-weight:700;color:#fff;cursor:pointer;
+  border:2px solid transparent;transition:transform var(--t-fast) var(--spring),border-color var(--t-fast)}
+.dr-acc:hover{transform:scale(1.12)}
+.dr-acc.on{border-color:var(--primary);box-shadow:0 0 12px var(--glow-soft)}
+.dr-acc.add{background:var(--bg-3);color:var(--text-2);font-size:18px}
+.dr-it{display:flex;align-items:center;gap:14px;padding:11px 20px;font-size:13.5px;cursor:pointer;transition:background var(--t-fast)}
+.dr-it:hover{background:var(--hover)}
+.dr-it .di{width:21px;text-align:center;color:var(--text-2)}
+.dr-it .grow{flex:1}
+.dr-it .sub{font-size:10px;color:var(--text-3);font-family:var(--mono);display:block}
+.dr-sep{height:1px;background:var(--divider);margin:6px 0}
+.dr-ver{margin-top:auto;padding:14px 20px;font-family:var(--mono);font-size:9.5px;color:var(--text-3);letter-spacing:.1em}
+
+/* ---------- settings ---------- */
+#settings{position:fixed;top:0;right:0;bottom:0;width:min(380px,100%);background:var(--bg-1);z-index:70;transform:translateX(105%);
+  transition:transform var(--t-slow) var(--spring-soft);display:flex;flex-direction:column;border-left:1px solid var(--divider);box-shadow:-24px 0 60px #000a}
+#settings.open{transform:none}
+.st-scroll{flex:1;padding-bottom:24px}
+.mono-box{font-family:var(--mono);font-size:10.5px;color:var(--text-2);background:var(--bg-2);padding:8px 11px;border-radius:9px;
+  word-break:break-all;cursor:pointer;transition:box-shadow var(--t-fast);line-height:1.5}
+.mono-box:hover{box-shadow:inset 0 0 0 1px var(--active-edge)}
+.st-themes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:4px 18px}
+.st-th{border-radius:11px;padding:10px 8px;cursor:pointer;text-align:center;font-size:10.5px;font-family:var(--mono);font-weight:700;
+  border:2px solid transparent;transition:transform var(--t-fast) var(--spring),border-color var(--t-fast);background:var(--bg-2)}
+.st-th:hover{transform:translateY(-2px)}
+.st-th.on{border-color:var(--primary);box-shadow:0 0 14px -3px var(--glow)}
+.st-th i{display:block;width:100%;height:8px;border-radius:4px;margin-bottom:7px}
+.relay-row{display:flex;align-items:center;gap:10px;padding:8px 18px;font-family:var(--mono);font-size:11px}
+.relay-row i{width:7px;height:7px;border-radius:50%;background:var(--badge-muted);flex:none}
+.relay-row i.on{background:var(--primary);box-shadow:0 0 7px var(--glow)}
+.relay-row .rr{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2)}
+.relay-row button{color:var(--text-3);padding:3px 7px;border-radius:6px}
+.relay-row button:hover{color:var(--danger);background:var(--hover-2)}
+.st-relay-add{display:flex;gap:8px;padding:8px 18px}
+.st-relay-add input{flex:1;background:var(--bg-2);border:1px solid transparent;border-radius:9px;padding:7.5px 11px;font-size:12px;font-family:var(--mono)}
+.st-relay-add input:focus{outline:none;border-color:var(--primary)}
+.st-relay-add button{background:var(--active);color:var(--primary);border-radius:9px;padding:0 14px;font-weight:700;transition:transform var(--t-fast) var(--spring)}
+.st-relay-add button:active{transform:scale(.94)}
+
+/* ---------- modals ---------- */
+.mbg{position:fixed;inset:0;background:#000b;backdrop-filter:blur(4px);z-index:80;display:none;align-items:center;justify-content:center}
+.mbg.open{display:flex;animation:fadeIn .2s both}
+@keyframes fadeIn{from{opacity:0}}
+.modal{background:var(--bg-1);clip-path:var(--notch);width:min(390px,92vw);padding:22px;box-shadow:0 30px 80px #000e,inset 0 0 0 1px #ffffff10;
+  animation:modalIn .38s var(--spring) both;max-height:86dvh;overflow-y:auto}
+@keyframes modalIn{from{opacity:0;transform:scale(.88) translateY(16px)}to{opacity:1;transform:none}}
+.m-title{font-weight:700;font-size:16px;margin-bottom:4px}
+.m-sub{font-size:11.5px;color:var(--text-2);font-family:var(--mono);margin-bottom:14px}
+.m-preview{display:flex;align-items:center;gap:11px;background:var(--bg-2);border-radius:13px;padding:11px 13px;margin-bottom:13px}
+.m-input{width:100%;background:var(--bg-2);border:1px solid transparent;border-radius:11px;padding:10px 13px;font-size:13.5px;margin-bottom:12px}
+.m-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--glow-soft)}
+.m-lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;color:var(--text-3);margin:0 0 7px 2px;text-transform:uppercase}
+.swatches{display:flex;gap:8px;margin-bottom:13px}
+.swatch{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2.5px solid transparent;transition:transform var(--t-fast) var(--spring),border-color var(--t-fast)}
+.swatch:hover{transform:scale(1.15)}
+.swatch.on{border-color:#fff;transform:scale(1.12);box-shadow:0 0 12px var(--glow-soft)}
+.egrid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-bottom:14px}
+.type-row{display:flex;gap:7px;margin-bottom:16px}
+.type-opt{flex:1;padding:9px 4px;border-radius:10px;background:var(--bg-2);text-align:center;font-size:11.5px;font-weight:600;color:var(--text-2);
+  cursor:pointer;transition:all var(--t-fast)}
+.type-opt.on{background:var(--active);color:var(--primary);box-shadow:inset 0 0 0 1px var(--active-edge)}
+.m-actions{display:flex;gap:9px;justify-content:flex-end}
+.btn{padding:9px 20px;border-radius:11px;font-weight:700;font-size:13px;transition:transform var(--t-fast) var(--spring),box-shadow var(--t-fast)}
+.btn:active{transform:scale(.95)}
+.btn.pri{background:var(--grad);color:var(--on-primary);clip-path:var(--notch-sm);box-shadow:0 4px 18px -5px var(--glow)}
+.btn.pri:hover{box-shadow:0 4px 26px -3px var(--glow)}
+.btn.gho{color:var(--primary)}
+.btn.gho:hover{background:var(--active)}
+/* invite */
+.inv-link-box{font-family:var(--mono);font-size:10.5px;background:var(--bg-2);padding:10px 13px;border-radius:10px;word-break:break-all;
+  cursor:pointer;color:var(--primary);transition:box-shadow var(--t-fast);margin-bottom:12px}
+.inv-link-box:hover{box-shadow:inset 0 0 0 1px var(--active-edge),0 0 16px -6px var(--glow)}
+#inv-qr{display:grid;place-items:center;padding:12px;background:#fff;border-radius:13px;margin-bottom:12px}
+#inv-qr img,#inv-qr table{display:block}
+.inv-pend{display:flex;align-items:center;gap:10px;background:var(--bg-2);border-radius:11px;padding:9px 12px;margin-bottom:7px}
+.inv-pend .grow{flex:1;font-size:12px;font-family:var(--mono)}
+.inv-pend button{font-size:11px;padding:5px 11px;border-radius:8px;font-weight:700}
+.inv-pend .ok{background:var(--active);color:var(--primary)}
+.inv-pend .no{color:var(--danger)}
+/* ttl */
+.ttl-opt{display:flex;align-items:center;gap:12px;width:100%;padding:11px 13px;border-radius:11px;font-size:13.5px;text-align:left;
+  transition:background var(--t-fast)}
+.ttl-opt:hover{background:var(--hover)}
+.ttl-opt.on{background:var(--active);color:var(--primary)}
+.ttl-opt .tt{flex:1}
+.ttl-opt .tm{font-family:var(--mono);font-size:10.5px;color:var(--text-3)}
+
+/* ---------- inspector ---------- */
+#insp-fab{position:fixed;right:16px;bottom:16px;z-index:55;font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;
+  background:var(--bg-2);color:var(--primary);padding:8px 13px;clip-path:var(--notch-sm);cursor:pointer;
+  box-shadow:inset 0 0 0 1px var(--active-edge),0 4px 18px #0008;transition:box-shadow var(--t-fast),transform var(--t-fast) var(--spring)}
+#insp-fab:hover{box-shadow:inset 0 0 0 1px var(--active-edge),0 0 18px -2px var(--glow);transform:translateY(-2px)}
+#insp{position:fixed;right:16px;bottom:60px;width:min(430px,calc(100vw - 32px));max-height:70dvh;background:color-mix(in srgb,var(--bg-1) 96%,transparent);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);clip-path:var(--notch);z-index:56;display:flex;flex-direction:column;
+  box-shadow:0 24px 70px #000d,inset 0 0 0 1px var(--active-edge);opacity:0;pointer-events:none;transform:translateY(16px) scale(.95);
+  transform-origin:bottom right;transition:opacity var(--t-med),transform var(--t-med) var(--spring)}
+#insp.open{opacity:1;pointer-events:auto;transform:none}
+.insp-head{display:flex;align-items:center;gap:9px;padding:11px 15px;border-bottom:1px solid var(--divider)}
+.insp-head .t{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--primary)}
+#live-pill{margin-left:auto;display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;padding:5.5px 12px;
+  clip-path:var(--notch-sm);background:var(--bg-3);color:var(--text-2);cursor:pointer;transition:all var(--t-med)}
+#live-pill.on{background:var(--active);color:var(--primary);box-shadow:0 0 14px -2px var(--glow)}
+#live-dot{width:7px;height:7px;border-radius:50%;background:var(--badge-muted)}
+#live-pill.on #live-dot{background:var(--primary);box-shadow:0 0 8px var(--glow);animation:pulse 1.6s infinite}
+#in-id{padding:10px 15px;font-family:var(--mono);font-size:10px;color:var(--text-2);border-bottom:1px solid var(--divider);line-height:1.7;word-break:break-all}
+#in-id b{color:var(--primary);font-weight:700}
+#evlog{flex:1;min-height:120px;padding:8px 15px;font-family:var(--mono);font-size:10px;line-height:1.75}
+.ev{padding:3px 0;border-bottom:1px dashed #ffffff0a;animation:rowIn .3s var(--ease-out)}
+.ev .dir{font-weight:700}
+.ev .out2{color:var(--accent2)}.ev .in2{color:var(--primary)}
+.ev .kd{color:var(--text-3)}
+.ev .ds{color:var(--text-2)}
+.ev .tm{color:var(--text-3);margin-right:7px}
+
+/* ---------- login ---------- */
+#login{position:fixed;inset:0;background:var(--bg-0);z-index:90;display:none;align-items:center;justify-content:center}
+#login.open{display:flex;animation:fadeIn .25s both}
+.lg-box{width:min(400px,92vw);clip-path:var(--notch);background:var(--bg-1);padding:30px 26px;box-shadow:inset 0 0 0 1px #ffffff10,0 30px 90px #000d;
+  animation:modalIn .4s var(--spring) both;position:relative}
+.lg-view{display:none;flex-direction:column;gap:11px}
+.lg-view.on{display:flex;animation:rowIn .3s var(--ease-out)}
+.lg-logo{font-family:var(--mono);font-weight:700;font-size:26px;text-align:center;margin-bottom:4px}
+.lg-logo b{color:var(--primary);text-shadow:0 0 18px var(--glow)}
+.lg-sub{font-family:var(--mono);font-size:10px;color:var(--text-3);text-align:center;letter-spacing:.2em;margin-bottom:10px}
+.lg-btn{padding:12px;border-radius:12px;background:var(--grad);color:var(--on-primary);font-weight:700;font-size:13.5px;clip-path:var(--notch-sm);
+  transition:transform var(--t-fast) var(--spring),box-shadow var(--t-fast);box-shadow:0 4px 20px -5px var(--glow)}
+.lg-btn:hover{transform:translateY(-1px);box-shadow:0 6px 28px -4px var(--glow)}
+.lg-btn.sec{background:var(--bg-2);color:var(--text-1);box-shadow:none}
+.lg-btn.sec:hover{box-shadow:inset 0 0 0 1px var(--active-edge)}
+.lg-link{font-size:11.5px;color:var(--accent2);text-align:center;font-family:var(--mono);cursor:pointer;padding:4px}
+.lg-link:hover{text-shadow:0 0 10px var(--accent2)}
+.lg-input{background:var(--bg-2);border:1px solid transparent;border-radius:11px;padding:11px 13px;font-family:var(--mono);font-size:11.5px;width:100%;resize:none}
+.lg-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--glow-soft)}
+.lg-err{color:var(--danger);font-size:11px;font-family:var(--mono);min-height:14px;text-align:center}
+#lg-qr{display:grid;place-items:center;background:#fff;padding:12px;border-radius:13px}
+.lg-x{position:absolute;top:10px;right:12px}
+.lg-back{position:absolute;top:10px;left:12px}
+
+/* ---------- bottom nav ---------- */
+#bnav{position:fixed;left:0;right:0;bottom:0;z-index:50;display:none;background:color-mix(in srgb,var(--bg-1) 92%,transparent);
+  backdrop-filter:blur(16px);border-top:1px solid var(--divider);padding:5px 8px calc(5px + env(safe-area-inset-bottom))}
+#bnav.show{display:flex;animation:barUp .35s var(--spring-soft)}
+@keyframes barUp{from{transform:translateY(100%)}to{transform:none}}
+.bn-it{flex:1;display:flex;flex-direction:column;align-items:center;gap:2.5px;padding:6px;font-size:9.5px;color:var(--text-3);
+  font-family:var(--mono);letter-spacing:.06em;position:relative;border-radius:10px;transition:color var(--t-fast)}
+.bn-it.on{color:var(--primary)}
+.bn-it svg{width:21px;height:21px}
+.bn-it .bdg{position:absolute;top:1px;right:calc(50% - 21px);min-width:16px;height:16px;padding:0 4px;border-radius:8px;
+  background:var(--badge);color:var(--badge-text);font-size:9.5px;font-weight:700;display:grid;place-items:center}
+
+/* ---------- responsive ---------- */
+@media (max-width:1200px){#app{grid-template-columns:300px 272px 1fr}}
+@media (max-width:900px){
+  #app{grid-template-columns:1fr}
+  #app.ready #chats-col,#app.ready #topics-col,#app.ready #convo-col{animation:none}
+  #chats-col,#topics-col,#convo-col{position:absolute;inset:0;transition:transform var(--t-slow) var(--spring-soft)}
+  #topics-col{transform:translateX(105%);z-index:10}
+  #topics-col.open{transform:none}
+  #convo-col{transform:translateX(105%);z-index:11}
+  #convo-col.open{transform:none}
+  .mobile-only{display:grid!important}
+  .sheet{width:100%}
+  #bnav{display:flex}
+  body.no-bnav #bnav{display:none}
+  #composer{padding-bottom:calc(10px + 58px)}
+  body.no-bnav #composer{padding-bottom:12px}
+  #fab{bottom:calc(86px + 58px)}
+  body.no-bnav #fab{bottom:86px}
+  #insp-fab{bottom:calc(86px + 58px)}
+  body.no-bnav #insp-fab{bottom:86px}
+  #insp{bottom:calc(138px + 58px)}
+  body.no-bnav #insp{bottom:138px}
+}
+@media (min-width:901px){#bnav{display:none!important}}
+
+/* ---------- reduced motion ---------- */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
+  #msgs{scroll-behavior:auto}
+  #fx .aurora i{animation:none}
+  #rain{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ambient CRT stack -->
+<div id="fx"><div class="aurora"><i></i><i></i></div><div class="grid"></div><div class="scan"></div><div class="vig"></div><div class="flicker"></div></div>
+
+<!-- boot sequence -->
+<div id="boot">
+  <div class="term">
+    <div class="b-logo">╔═╗ ═╗╔═<br>0xVECTOR.SYS</div>
+    <div class="b-lines" id="b-lines"></div>
+    <div class="b-bar"><i id="b-fill"></i></div>
+    <div class="b-skip">PRESS ANY KEY TO SKIP</div>
+  </div>
+</div>
+
+<div id="app">
+  <!-- ======== COL 1 · CHAT LIST ======== -->
+  <aside id="chats-col">
+    <div class="brand">
+      <button class="ibtn rip-host" id="hamburger" title="Menu"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <div class="brand-mark" id="brand-mark">0x</div>
+      <div class="brand-name" id="brand-name">0x<span>Vector</span></div>
+      <div class="theme-dots" id="theme-dots"></div>
+    </div>
+    <div class="search-wrap"><input class="search" id="g-search" placeholder="Search chats, topics, messages"></div>
+    <div class="tabs" id="tabs">
+      <div class="tab-ind" id="tab-ind"></div>
+      <button class="tab on" data-tab="all">All Chats</button>
+      <button class="tab" data-tab="unread">Unread</button>
+      <button class="tab" data-tab="groups">Groups</button>
+    </div>
+    <div class="priv-strip rip-host" id="priv-strip" title="Relay connections — click for protocol inspector">
+      <span class="dot" id="tor-dot"></span><span id="priv-text">Tor · NIP-17 · Concord</span>
+      <span class="relay-dots" id="relay-dots"></span>
+    </div>
+    <div class="scr" id="chat-rows"></div>
+  </aside>
+
+  <!-- ======== COL 2 · TOPICS ======== -->
+  <aside id="topics-col">
+    <div class="tp-head">
+      <button class="ibtn mobile-only" id="tp-back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></button>
+      <div class="av sm" id="tp-av">V</div>
+      <div>
+        <div class="g-name" id="tp-name">Vector HQ</div>
+        <div class="g-sub" id="tp-sub">1,204 members · topics on</div>
+      </div>
+      <div class="tp-icos">
+        <button class="ibtn rip-host" id="tp-invite" title="Invite (CORD-05)"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M23 11h-6M20 8v6"/><circle cx="9" cy="7" r="4"/></svg></button>
+        <button class="ibtn rip-host" id="tp-bell" title="Mute group"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg></button>
+        <button class="ibtn rip-host" id="tp-info" title="Group overview"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M12 11.5v5"/></svg></button>
+      </div>
+    </div>
+    <div class="tp-actions">
+      <button class="new-topic rip-host" id="new-topic">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 5v14M5 12h14"/></svg>
+        New Topic
+      </button>
+      <button class="proj-btn rip-host" id="proj-open" title="Projects — NIP-34 git repos, issues, patches, PRs">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M4 17l6-5-6-5M12 19h8"/></svg>
+      </button>
+    </div>
+    <div class="scr" id="topic-rows"></div>
+  </aside>
+
+  <!-- ======== COL 3 · CONVERSATION ======== -->
+  <main id="convo-col">
+    <div id="convo-empty">
+      <canvas id="rain"></canvas>
+      <div class="empty-logo">0x</div>
+      <div class="empty-hint">Open <b>Vector HQ</b> · flip <b>LIVE</b> in the inspector for real relays</div>
+      <div class="empty-feats">
+        <div class="feat"><i>▸</i> real keypair + NIP-44 + gift-wraps</div>
+        <div class="feat"><i>▸</i> topics · announcement channels · voice</div>
+        <div class="feat"><i>▸</i> NIP-34 projects (git over nostr)</div>
+        <div class="feat"><i>▸</i> 6 themes incl. Armada Corsair &amp; Terminal</div>
+      </div>
+    </div>
+
+    <div id="convo-live">
+      <div class="cv-head" id="cv-head">
+        <button class="ibtn mobile-only" id="cv-back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <div class="crumbs" id="crumbs">
+          <div style="display:flex;align-items:center;gap:8px;min-width:0">
+            <span class="crumb-g" id="crumb-g"></span>
+            <span class="crumb-sep" id="crumb-sep">/</span>
+            <span class="crumb-t" id="crumb-t"></span>
+            <span class="ann-chip" id="ann-chip" style="display:none">📣 ANNOUNCEMENT</span>
+          </div>
+          <div class="cv-sub"><span id="cv-sub-t"></span>
+            <span class="e2e"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm-3 8V7a3 3 0 116 0v3H9z"/></svg>E2E · CONCORD</span>
+            <span id="ttl-chip" title="Disappearing messages (CORD-08)">⏱ <span id="ttl-val">off</span></span>
+          </div>
+        </div>
+        <div class="cv-search" id="cv-search"><input id="cv-search-in" placeholder="Search in topic"></div>
+        <div class="cv-icos">
+          <button class="ibtn rip-host" id="cv-search-btn" title="Search in topic"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></button>
+          <button class="ibtn rip-host" id="cv-bell" title="Topic notifications"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 01-3.4 0"/></svg></button>
+          <button class="ibtn rip-host" id="cv-menu" title="More"><svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="12" cy="19" r="1.8"/></svg></button>
+        </div>
+      </div>
+
+      <div id="voice-bar">
+        <div class="voice-live"><span class="vbar"><i></i><i></i><i></i></span></div>
+        <span class="vn" id="vb-name">Voice Lobby</span>
+        <span class="vs" id="vb-sub">3 talking · blind LiveKit broker · keys per sender (CORD-07)</span>
+        <button class="join-btn rip-host" id="vb-join">Join</button>
+      </div>
+      <div id="pins-bar">
+        <div class="pl"></div>
+        <div class="pt"><div class="pn">PINNED MESSAGE</div><div class="px" id="pins-text"></div></div>
+        <span class="pn2" id="pins-count"></span>
+      </div>
+
+      <div class="scr" id="msgs"></div>
+      <button id="fab"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg><span class="fb-badge" id="fb-badge" style="display:none"></span></button>
+
+      <div id="composer">
+        <div class="cbox">
+          <div class="cbox-reply" id="cp-reply">
+            <div style="flex:1;min-width:0">
+              <div class="e-lbl" id="cp-edit-lbl">EDIT MESSAGE · kind 3302</div>
+              <div class="rq"><div class="ra" id="cp-reply-a"></div><div class="rx" id="cp-reply-x"></div></div>
+            </div>
+            <button id="cp-reply-x-btn">✕</button>
+          </div>
+          <span class="c-topic" id="cp-topic"></span>
+          <div class="crow" id="crow">
+            <button class="ibtn rip-host" id="cp-attach" title="Attach — encrypted via Blossom, EXIF stripped"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5l-8.5 8.5a5.5 5.5 0 01-7.8-7.8L13 5a3.7 3.7 0 015.2 5.2l-8.2 8.2a1.85 1.85 0 01-2.6-2.6L15 8.3"/></svg></button>
+            <textarea id="cp-input" rows="1" placeholder="Message"></textarea>
+            <button class="ibtn rip-host" id="cp-emoji" title="Emoji & custom packs"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8.5 14s1.5 2 3.5 2 3.5-2 3.5-2M9 9.5h.01M15 9.5h.01"/></svg></button>
+            <button class="ibtn rip-host" id="cp-slash" title="Slash commands (bots)" style="font-family:var(--mono);font-weight:700;font-size:15px">/</button>
+            <button class="ibtn rip-host" id="cp-ttl" title="Disappearing messages"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg></button>
+          </div>
+          <div id="rec-bar">
+            <span class="rec-dot"></span>
+            <span class="rec-time" id="rec-time">0:00</span>
+            <div class="rec-wave" id="rec-wave"></div>
+            <span class="rec-hint" id="rec-hint">‹ SLIDE TO CANCEL</span>
+          </div>
+        </div>
+        <button class="mic-send" id="send-btn" title="Send · hold to record">
+          <svg id="ico-mic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
+          <svg id="ico-send" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M3.4 20.4l17.4-8.4L3.4 3.6l-.01 6.53L14 12 3.39 13.87z"/></svg>
+        </button>
+        <div class="pop" id="emoji-pop"><div class="pop-h">Emoji · custom packs sync over nostr</div><div class="egrid2" id="emoji-grid2"></div></div>
+        <div class="pop" id="slash-pop">
+          <div class="pop-h">Bot commands · Sentire</div>
+          <div class="slash-it" data-cmd="/screen"><span class="cmd">/screen</span><span class="ds">run live text screening on this topic</span></div>
+          <div class="slash-it" data-cmd="/contain"><span class="cmd">/contain</span><span class="ds">raid containment — quarantine mode</span></div>
+          <div class="slash-it" data-cmd="/topic"><span class="cmd">/topic</span><span class="ds">create a topic from a bot</span></div>
+          <div class="slash-it" data-cmd="/remind"><span class="cmd">/remind</span><span class="ds">schedule a reminder in this topic</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== SHEET · GROUP OVERVIEW ======== -->
+    <aside class="sheet" id="overview">
+      <div class="tp-head" style="border-bottom:none">
+        <div class="g-name">Group Info</div>
+        <div class="tp-icos"><button class="ibtn" id="ov-close"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      </div>
+      <div class="ov-scroll scr">
+        <div class="ov-hero">
+          <div class="ov-av" id="ov-av">V</div>
+          <div class="ov-name" id="ov-name">Vector HQ</div>
+          <div class="ov-sub">1,204 members · 98 online</div>
+          <span class="e2e ov-e2e"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 00-5 5v3H6a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2v-8a2 2 0 00-2-2h-1V7a5 5 0 00-5-5zm-3 8V7a3 3 0 116 0v3H9z"/></svg>E2E · CONCORD CHANNELS · EPOCH 7</span>
+        </div>
+        <div class="ov-sec">Community</div>
+        <div class="ov-row"><div class="ov-ic">🔔</div><div class="grow">Notifications<div class="sub">mentions + replies only</div></div><div class="sw on"></div></div>
+        <div class="ov-row"><div class="ov-ic">💬</div><div class="grow">Topics (forum mode)<div class="sub">in-stream sub-contexts · CORD-09</div></div><div class="sw on" id="forum-sw"></div></div>
+        <div class="ov-row" id="ov-invite"><div class="ov-ic">✉️</div><div class="grow">Invite members<div class="sub">keys encrypted under unlock token</div></div></div>
+        <div class="ov-sec">Permissions</div>
+        <div class="ov-row"><span class="role-tag role-owner">OWNER</span><div class="grow">JSKitty<div class="sub">root key · can rekey all channels</div></div></div>
+        <div class="ov-row"><span class="role-tag role-admin">ADMIN</span><div class="grow">alice, BonesGit<div class="sub">manage topics · pin · slow mode</div></div></div>
+        <div class="ov-row"><span class="role-tag role-every">EVERYONE</span><div class="grow">members<div class="sub">post in open topics · react · voice</div></div><div class="sw on" id="mt-sw"></div></div>
+        <div class="ov-sec">Members</div>
+        <div class="ov-row"><div class="member-stack">
+          <div class="mav2" style="background:#4e8ac1">A</div><div class="mav2" style="background:#c1554e">B</div>
+          <div class="mav2" style="background:#4ea15b">J</div><div class="mav2" style="background:#6b4f9e">M</div>
+          <div class="mav2" style="background:#c19a4e">V</div></div>
+          <div class="grow">1,204 members<div class="sub">npubs only — no phone numbers, ever</div></div></div>
+        <div class="ov-sec">Topics · <span id="ov-t-count"></span></div>
+        <div id="ov-topics"></div>
+      </div>
+    </aside>
+
+    <!-- ======== SHEET · PROJECTS (NIP-34) ======== -->
+    <aside class="sheet" id="projects">
+      <div class="tp-head" style="border-bottom:none">
+        <div class="g-name">Projects</div>
+        <div class="g-sub" style="margin-left:2px">NIP-34 · git over nostr</div>
+        <div class="tp-icos"><button class="ibtn" id="pj-close"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      </div>
+      <div class="pj-tabs" id="pj-tabs">
+        <button class="ptab on" data-ptab="repos">Repos</button>
+        <button class="ptab" data-ptab="issues">Issues</button>
+        <button class="ptab" data-ptab="patches">Patches</button>
+        <button class="ptab" data-ptab="prs">PRs</button>
+      </div>
+      <div class="pj-tools">
+        <input id="pj-search" placeholder="Search projects">
+        <div class="pj-status" id="pj-status"><button data-st="all" class="on">all</button><button data-st="open">open</button><button data-st="merged">merged</button><button data-st="closed">closed</button></div>
+        <button class="ibtn" id="pj-viewmode" title="Grid / list"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></button>
+        <button class="ibtn" id="pj-new" title="New repo / issue"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></button>
+      </div>
+      <div class="ov-scroll scr" id="pj-body"></div>
+    </aside>
+  </main>
+</div>
+
+<!-- ======== HAMBURGER DRAWER ======== -->
+<div id="drawer-bg"></div>
+<nav id="drawer">
+  <div class="dr-id">
+    <div class="dr-av" id="dr-av">Y</div>
+    <div class="dr-name" id="dr-name">you</div>
+    <div class="dr-npub" id="dr-npub-copy"><span id="dr-npub">npub1…</span><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></svg></div>
+  </div>
+  <div class="dr-accs" id="dr-accs"></div>
+  <div class="dr-sep"></div>
+  <div class="dr-it" id="dr-new-community"><span class="di">⬡</span><span class="grow">New Community<span class="sub">channels + topics from genesis</span></span></div>
+  <div class="dr-it" id="dr-projects"><span class="di">⌥</span><span class="grow">Projects<span class="sub">NIP-34 git workspace</span></span></div>
+  <div class="dr-it" id="dr-invites"><span class="di">✉</span><span class="grow">Invites<span class="sub">pending key bundles</span></span></div>
+  <div class="dr-sep"></div>
+  <div class="dr-it" id="dr-tor"><span class="di">🧅</span><span class="grow">Tor<span class="sub">all relay traffic over onion</span></span><div class="sw on" id="tor-sw"></div></div>
+  <div class="dr-it" id="dr-inspector"><span class="di">⌗</span><span class="grow">Protocol Inspector<span class="sub">watch the wire — gift wraps live</span></span></div>
+  <div class="dr-it" id="dr-settings"><span class="di">⚙</span><span class="grow">Settings</span></div>
+  <div class="dr-it" id="dr-about"><span class="di">ⓘ</span><span class="grow">About 0xVector</span></div>
+  <div class="dr-ver">0XVECTOR v0.5.0-TOPICS · MIT · REPRODUCIBLE</div>
+</nav>
+
+<!-- ======== SETTINGS SHEET ======== -->
+<aside id="settings">
+  <div class="tp-head"><div class="g-name">Settings</div>
+    <div class="tp-icos"><button class="ibtn" id="st-close"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  </div>
+  <div class="st-scroll scr">
+    <div class="ov-sec">Identity</div>
+    <div class="ov-row"><div class="ov-ic">🔑</div><div class="grow">npub<div class="mono-box" id="st-npub" style="margin-top:4px">…</div></div></div>
+    <div class="ov-row" id="st-copy-npub"><div class="ov-ic">📋</div><div class="grow">Copy npub</div></div>
+    <div class="ov-row" id="st-reveal"><div class="ov-ic">👁</div><div class="grow">Reveal nsec<div class="sub" id="st-nsec">hidden — tap to reveal · never leaves device</div></div></div>
+    <div class="ov-row"><div class="ov-ic">🖊</div><div class="grow">Remote signer (NIP-46)<div class="sub">keys stay in bunker / Amber</div></div><div class="sw" id="signer-sw"></div></div>
+    <div class="ov-sec">Network</div>
+    <div class="ov-row"><div class="ov-ic">🧅</div><div class="grow">Tor<div class="sub" id="st-tor-sub">connected via 127.0.0.1:9050</div></div><div class="sw on" id="st-tor-sw"></div></div>
+    <div class="ov-sec">Relays</div>
+    <div id="st-relays"></div>
+    <div class="st-relay-add"><input id="st-relay-in" placeholder="wss://your-relay.example"><button id="st-relay-add">+</button></div>
+    <div class="ov-sec">Appearance</div>
+    <div class="st-themes" id="st-themes"></div>
+    <div class="ov-row"><div class="ov-ic">📱</div><div class="grow">Bottom nav (mobile)<div class="sub">Telegram-style tab bar</div></div><div class="sw on" id="bnav-sw"></div></div>
+    <div class="ov-sec">Storage</div>
+    <div class="ov-row" id="st-clear-cache"><div class="ov-ic">🗑</div><div class="grow">Clear media cache<div class="sub">hash-deduped · re-fetch on demand</div></div></div>
+    <div class="ov-sec">Developer</div>
+    <div class="ov-row" id="st-sdk"><div class="ov-ic">📦</div><div class="grow">vector-sdk 0.9<div class="sub">community.topics() ships with CORD-09</div></div></div>
+    <div class="ov-row" id="st-mcp"><div class="ov-ic">🤖</div><div class="grow">MCP server<div class="sub">let agents drive your client</div></div><div class="sw" id="mcp-sw"></div></div>
+  </div>
+</aside>
+
+<!-- ======== BOTTOM NAV ======== -->
+<nav id="bnav">
+  <button class="bn-it on" data-bn="chats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.4 8.4 0 01-8.5 8.4c-1.5 0-3-.4-4.2-1.1L3 20l1.2-5.2A8.4 8.4 0 1121 11.5z"/></svg>CHATS<span class="bdg" id="bn-chats-badge" style="display:none"></span></button>
+  <button class="bn-it" data-bn="topics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h7"/></svg>TOPICS</button>
+  <button class="bn-it" data-bn="voice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>VOICE</button>
+  <button class="bn-it" data-bn="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.9 2.9l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.2a1.7 1.7 0 00-1-1.5 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.9-2.9l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.2a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.9-2.9l.1.1a1.7 1.7 0 001.9.3h0a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.2a1.7 1.7 0 001 1.5h0a1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.9 2.9l-.1.1a1.7 1.7 0 00-.3 1.9v0a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.2a1.7 1.7 0 00-1.5 1z"/></svg>MORE</button>
+</nav>
+
+<!-- ======== NEW TOPIC MODAL ======== -->
+<div class="mbg" id="modal-bg">
+  <div class="modal">
+    <div class="m-title">New Topic</div>
+    <div class="m-sub">folds into the signed registry · rumor kind 3310</div>
+    <div class="m-preview"><div class="t-ic" id="m-preview" style="width:40px;height:40px;font-size:18px">💬</div><div><div style="font-weight:700" id="m-pv-name">Topic name</div><div class="g-sub" id="m-pv-type">discussion topic</div></div></div>
+    <input class="m-input" id="m-name" placeholder="Topic name" maxlength="40">
+    <div class="m-lbl">Color</div>
+    <div class="swatches" id="m-swatches"></div>
+    <div class="m-lbl">Icon</div>
+    <div class="egrid" id="m-icons"></div>
+    <div class="m-lbl">Type</div>
+    <div class="type-row" id="m-types">
+      <div class="type-opt on" data-ty="discussion">💬 Discussion</div>
+      <div class="type-opt" data-ty="announce">📣 Announce</div>
+      <div class="type-opt" data-ty="voice">🎙 Voice</div>
+    </div>
+    <div class="m-actions"><button class="btn gho" id="m-cancel">Cancel</button><button class="btn pri" id="m-create">Create Topic</button></div>
+  </div>
+</div>
+
+<!-- ======== INVITE MODAL ======== -->
+<div class="mbg" id="modal-bg2">
+  <div class="modal">
+    <div class="m-title">Invite to Vector HQ</div>
+    <div class="m-sub">CORD-05 · keys encrypted under one-time unlock token</div>
+    <div id="inv-qr"></div>
+    <div class="inv-link-box" id="inv-link">0xvector://join/VHQ#tk=…</div>
+    <div class="m-lbl">Direct npub invite</div>
+    <div class="st-relay-add" style="padding:0;margin-bottom:14px"><input id="inv-npub" placeholder="npub1…"><button id="inv-direct">Send</button></div>
+    <div class="m-lbl">Pending</div>
+    <div id="inv-pending"></div>
+    <div class="m-actions" style="margin-top:14px"><button class="btn gho" id="inv-revoke">Revoke all</button><button class="btn pri" id="inv-close">Done</button></div>
+  </div>
+</div>
+
+<!-- ======== TTL MODAL ======== -->
+<div class="mbg" id="modal-bg3">
+  <div class="modal">
+    <div class="m-title">Disappearing Messages</div>
+    <div class="m-sub">CORD-08 · expiry rides inside the gift wrap</div>
+    <div id="ttl-opts">
+      <button class="ttl-opt on" data-ttl="0"><span class="tt">Off</span><span class="tm">persist</span></button>
+      <button class="ttl-opt" data-ttl="30"><span class="tt">30 seconds</span><span class="tm">burn after read</span></button>
+      <button class="ttl-opt" data-ttl="300"><span class="tt">5 minutes</span><span class="tm">short-lived</span></button>
+      <button class="ttl-opt" data-ttl="3600"><span class="tt">1 hour</span><span class="tm">session</span></button>
+      <button class="ttl-opt" data-ttl="86400"><span class="tt">1 day</span><span class="tm">ephemeral day</span></button>
+    </div>
+    <div class="m-actions" style="margin-top:14px"><button class="btn pri" id="ttl-done">Set timer</button></div>
+  </div>
+</div>
+
+<!-- ======== PROTOCOL INSPECTOR ======== -->
+<button id="insp-fab">⌗ WIRE</button>
+<section id="insp">
+  <div class="insp-head">
+    <span class="t">PROTOCOL INSPECTOR</span>
+    <button id="live-pill"><span id="live-dot"></span><span id="live-text">DEMO</span></button>
+  </div>
+  <div id="in-id"></div>
+  <div class="scr" id="evlog"></div>
+</section>
+
+<!-- ======== LOGIN / ADD ACCOUNT ======== -->
+<div id="login">
+  <div class="lg-box">
+    <button class="ibtn lg-x" id="lg-close"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button class="ibtn lg-back" id="lg-back" style="display:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg></button>
+    <div class="lg-view on" id="lg-start">
+      <div class="lg-logo">0x<b>Vector</b></div>
+      <div class="lg-sub">CHAT LIKE CIPHERPUNKS DO</div>
+      <button class="lg-btn" id="lg-create">Create new keys</button>
+      <button class="lg-btn sec" id="lg-login">Log in with nsec</button>
+      <span class="lg-link" id="lg-bunker-link">remote signer (NIP-46 bunker)</span>
+      <span class="lg-link" id="lg-amber">Amber · NIP-55 (Android)</span>
+    </div>
+    <div class="lg-view" id="lg-import">
+      <div class="lg-logo" style="font-size:19px">Import keys</div>
+      <div class="lg-sub">NSEC / HEX — NEVER LEAVES DEVICE</div>
+      <textarea class="lg-input" id="lg-input" rows="3" placeholder="nsec1…"></textarea>
+      <div class="lg-err" id="lg-err"></div>
+      <button class="lg-btn" id="lg-go">Import</button>
+      <span class="lg-link" id="lg-bunker-link2">use a remote signer instead</span>
+    </div>
+    <div class="lg-view" id="lg-create-view">
+      <div class="lg-logo" style="font-size:19px">Your new identity</div>
+      <div class="lg-sub">BACK UP THE NSEC — IT IS THE ACCOUNT</div>
+      <div class="m-lbl">npub (public)</div>
+      <div class="mono-box" id="lg-new-npub"></div>
+      <div class="m-lbl">nsec (secret · tap to copy)</div>
+      <div class="mono-box" id="lg-nsec-box"><span id="lg-new-nsec"></span></div>
+      <button class="lg-btn" id="lg-enter">Enter 0xVector →</button>
+    </div>
+    <div class="lg-view" id="lg-bunker-view">
+      <div class="lg-logo" style="font-size:19px">Remote signer</div>
+      <div class="lg-sub">NIP-46 · SIGNING HAPPENS OFF-DEVICE</div>
+      <div id="lg-qr"></div>
+      <span class="lg-link" id="lg-copy-nc">copy nostrconnect:// link</span>
+      <div class="m-lbl" style="margin-top:6px">or paste bunker://</div>
+      <textarea class="lg-input" id="lg-bunker-input" rows="2" placeholder="bunker://…?relay=wss://…"></textarea>
+      <button class="lg-btn" id="lg-bunker-connect">Connect signer</button>
+      <div class="lg-err" id="lg-bunker-status"></div>
+    </div>
+  </div>
+</div>
+
+<div id="ctx"></div>
+<div id="toasts"></div>
+<script>
+/* ================================================================
+   UI STATE — topics fold from a signed registry; every message
+   rumor carries ["topic", id]. type: discussion | announce | voice
+   ================================================================ */
+const PALETTE=['#6b4f9e','#c1554e','#4e8ac1','#4ea15b','#c19a4e','#b0547d'];
+const GRAD=c=>`linear-gradient(135deg,${c},${c}99)`;
+const ICONS=['💬','📢','💡','🎨','🔧','📅','❓','🔥','🎮','📚','🧪','🛡️','🌍','🎵','💰','🤖'];
+const WAVE=[8,14,20,12,24,18,10,22,16,26,13,19,9,17,23,11,15,21,8,14,18,12];
+const THEMES=[{n:'vector',c:'#33DB98'},{n:'armada',c:'#F45B9D'},{n:'terminal',c:'#33FF66'},
+  {n:'satoshi',c:'#F7931A'},{n:'monero',c:'#FF6600'},{n:'cyberpunk',c:'#59FCF4'}];
+const EMOJI=['👍','❤️','🔥','😂','🎉','🚀','😍','🤔','👀','✅','🚢','🔒','⚡','🧠','💯','🫡'];
+const QUICK_RX=['👍','❤️','🔥','😂','🎉','🚀'];
+const $=s=>document.querySelector(s);
+const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const S={
+  tab:'all', chat:null, topic:null, reply:null, edit:null, selColor:1, selIcon:4, selType:'discussion',
+  search:'', ttl:0, voiceJoined:false, newBelow:0, accIdx:0, ncLink:'',
+  chats:[
+    {id:'hq', name:'Vector HQ', av:'V', color:'#6b4f9e', forum:true, pinned:true, time:'14:32', unread:0},
+    {id:'alice', name:'Alice', handle:'npub1q…x9k2', av:'A', color:'#4e8ac1', dm:true, online:true,
+     sub:'the gift wrap landed, relays saw nothing 🎁', time:'13:05', unread:1},
+    {id:'sentire', name:'Sentire', av:'🛡️', color:'#4ea15b', bot:true,
+     sub:'raid contained · 3 accounts quarantined · 0 false positives', time:'11:47', muted:true},
+    {id:'cpunks', name:'cypherpunks', av:'C', color:'#c1554e', group:true,
+     sub:'<span class="sndr">moe:</span> new relay list is live — ditto-relay + 2 community boxes', time:'09:12', unread:4},
+    {id:'mom', name:'Mom', av:'M', color:'#b0547d', dm:true,
+     sub:'🎙️ voice · 0:42 · transcribed on-device', time:'Yesterday'},
+    {id:'ams', name:'Amethyst (interop test)', av:'⚡', color:'#7a6ac1', group:true,
+     sub:'<span class="sndr">vitor:</span> we see your topic messages as flat chat — ship CORD-09!', time:'Mon'},
+  ],
+  topics:[
+    {id:'t-ann', name:'Announcements', icon:'📣', color:1, pinned:true, type:'announce',
+     unread:1, at:0, last:'v0.4.5 on F-Droid — reproducible build matched ✅', time:'14:01'},
+    {id:'t-chlog', name:'Release Feed', icon:'🚢', color:3, type:'announce',
+     unread:0, at:0, last:'nightly e01ce46 · topics pipeline green', time:'12:30'},
+    {id:'general', name:'General', icon:'💬', color:0, general:true, type:'discussion',
+     unread:0, at:0, last:'<span class="sndr">JSKitty:</span> shipping v0.5 with topics 🚢', time:'14:32'},
+    {id:'t-dev', name:'Dev Talk', icon:'🔧', color:2, pinned:true, type:'discussion',
+     unread:12, at:2, last:'<span class="sndr">BonesGit:</span> migration ids 33–39 are burned, never reuse', time:'13:58'},
+    {id:'t-design', name:'Design', icon:'🎨', color:5, type:'discussion',
+     unread:3, at:0, last:'<span class="sndr">alice:</span> new topic icons look clean', time:'12:44'},
+    {id:'t-ideas', name:'Feature Ideas', icon:'💡', color:3, type:'discussion',
+     unread:0, at:0, last:'topics in bot DMs when? (Telegram got it in API 9.3)', time:'11:20'},
+    {id:'t-off', name:'Off-Topic', icon:'🔥', color:4, muted:true, type:'discussion',
+     unread:86, at:0, last:'gm ☕', time:'10:02'},
+    {id:'t-vote', name:'Logo Vote', icon:'🗳️', color:1, closed:true, type:'discussion',
+     unread:0, at:0, last:'topic closed by owner — read-only', time:'Tue'},
+    {id:'t-voice', name:'Voice Lobby', icon:'🎙️', color:2, type:'voice',
+     unread:0, at:0, last:'3 talking · E2E per-sender keys', time:'now'},
+  ],
+  pins:{'t-dev':['migration ids 33–39 are burned, never reuse — silent skip on some DBs','db rule for topics: next id above HIGHEST_MIGRATION_ID']},
+};
+
+const M={
+ 'general':[
+  {id:'m0',who:'day',text:'Today'},
+  {id:'m1',who:'svc', text:'JSKitty enabled Topics · history moved to General · epoch rotated'},
+  {id:'m2',who:'in', name:'alice', cls:'a1', text:'wait so the group just opens like a chat list now? no channel sidebar?', time:'14:20'},
+  {id:'m3',who:'in', name:'JSKitty', cls:'a0', text:'yeah — topics ride as a sealed tag on the rumor. relays can\'t even count them', time:'14:24', rx:{'🔥':4,'🚀':2}},
+  {id:'m4',who:'out', text:'and Armada sees a flat chat until CORD-09 lands. graceful degradation ✅', time:'14:26', reply:{a:'JSKitty',x:'relays can\'t even count them'}, status:'ack'},
+  {id:'m5',who:'in', name:'JSKitty', cls:'a0', text:'exactly. shipping v0.5 with topics 🚢', time:'14:32'},
+ ],
+ 't-dev':[
+  {id:'d0',who:'day',text:'Today'},
+  {id:'d1',who:'svc', text:'BonesGit created topic “Dev Talk”'},
+  {id:'d2',who:'in', name:'BonesGit', cls:'a2', text:'db rule for topics: next id above HIGHEST_MIGRATION_ID, bump the constant, the test enforces it', time:'13:40'},
+  {id:'d3',who:'out', text:'and every topic op takes a SessionGuard. account swap mid-create must abort without a write', time:'14:05', rx:{'💯':3}, status:'ack'},
+  {id:'d4',who:'in', name:'alice', cls:'a1', kind:'link', text:'dropped the CORD-09 draft here', link:{t:'CORD-09: Topics — concord-protocol/concord',d:'In-stream sub-contexts: a signed ["topic", id] tag on chat-plane rumors…'}, time:'14:07'},
+  {id:'d5',who:'in', name:'BonesGit', cls:'a2', text:'migration ids 33–39 are burned, never reuse', time:'13:58'},
+ ],
+ 't-ann':[{id:'a0',who:'day',text:'Today'},{id:'a1',who:'in', name:'Vector Releases', cls:'a3', text:'v0.4.5 is live on F-Droid — reproducible build matched byte-for-byte ✅', time:'14:01', rx:{'🎉':18,'❤️':7}}],
+ 't-chlog':[{id:'c0',who:'day',text:'Today'},{id:'c1',who:'in', name:'CI', cls:'a0', kind:'link', text:'nightly e01ce46 · topics pipeline green', link:{t:'0xvector @ e01ce46 — gitworkshop.dev',d:'tests: 412 passed · vector-core topics suite green'}, time:'12:30'}],
+ 't-design':[
+  {id:'g0',who:'day',text:'Today'},
+  {id:'g1',who:'in', name:'alice', cls:'a1', kind:'img', text:'topic icons v3 — emoji in a colored circle', time:'12:40'},
+  {id:'g2',who:'in', name:'alice', cls:'a1', text:'new topic icons look clean', time:'12:44', rx:{'😍':2}},
+ ],
+ 't-ideas':[{id:'i0',who:'day',text:'Today'},{id:'i1',who:'in', name:'moe', cls:'a2', text:'topics in bot DMs when? (Telegram got it in API 9.3 — our SDK could do it first-class from local state)', time:'11:20'}],
+ 't-off':[{id:'o0',who:'day',text:'Today'},{id:'o1',who:'in', name:'gm-bot', cls:'a3', text:'gm ☕', time:'10:02'}],
+ 't-vote':[
+  {id:'v0',who:'day',text:'Tuesday'},
+  {id:'v1',who:'in', name:'alice', cls:'a1', text:'the green one. obviously.', time:'Mon'},
+  {id:'v2',who:'svc', text:'topic closed by owner · read-only for members'},
+ ],
+ 't-voice':[{id:'w0',who:'day',text:'Today'},{id:'w1',who:'svc', text:'voice room open · blind token broker learns nothing about the community'}],
+ 'alice':[
+  {id:'l0',who:'day',text:'Today'},
+  {id:'l1',who:'in', name:'Alice', cls:'a1', text:'NIP-44 for content, NIP-59 gift wrap for metadata. relays get nothing', time:'13:04'},
+  {id:'l2',who:'in', name:'Alice', cls:'a1', text:'the gift wrap landed, relays saw nothing 🎁', time:'13:05', rx:{'🎁':1}},
+  {id:'l3',who:'out', kind:'voice', time:'13:08', dur:42, vt:'“Same here. Also the topics build feels fast — way under the 200MB budget.”', status:'ack'},
+ ],
+ 'cpunks':[{id:'p0',who:'day',text:'Today'},{id:'p1',who:'in', name:'moe', cls:'a2', text:'new relay list is live — ditto-relay + 2 community boxes', time:'09:12'}],
+ 'sentire':[{id:'s0',who:'day',text:'Today'},{id:'s1',who:'in', name:'Sentire', cls:'a3', text:'raid contained · 3 accounts quarantined · 0 false positives', time:'11:47'}],
+ 'mom':[{id:'mm0',who:'day',text:'Yesterday'},{id:'mm1',who:'in', name:'Mom', cls:'a3', kind:'voice', time:'Yesterday', dur:42, vt:'“Call me when you land. Love you.”'}],
+ 'ams':[{id:'x0',who:'day',text:'Monday'},{id:'x1',who:'in', name:'vitor', cls:'a4', text:'we see your topic messages as flat chat — ship CORD-09 so Amethyst renders them natively!', time:'Mon'}],
+};
+
+/* NIP-34 demo data — the community's git workspace */
+const PROJECTS={
+  repos:[
+    {n:'0xvector',d:'the messenger — Tauri v2 · vector-core · Concord topics',stars:412,issues:14,patches:6,prs:3},
+    {n:'concord-topics',d:'CORD-09 draft — in-stream topic sub-contexts',stars:96,issues:3,patches:2,prs:1},
+    {n:'sentire-plugin-topics',d:'per-topic screening for the Sentire bot',stars:31,issues:1,patches:0,prs:2},
+  ],
+  issues:[
+    {t:'Topic registry resurrection on re-fold after delete',r:'0xvector',st:'open',id:'1621'},
+    {t:'Android: topic badges lag behind sync on cold start',r:'0xvector',st:'open',id:'1621'},
+    {t:'CORD-09: should topic-op rumor kinds be parameterized?',r:'concord-topics',st:'open',id:'1621'},
+    {t:'F-Droid repro build diverges on whisper-rs pin',r:'0xvector',st:'closed',id:'1621'},
+  ],
+  patches:[
+    {t:'feat: sealed ["topic", id] tag on chat-plane rumors',r:'0xvector',st:'open',id:'1617'},
+    {t:'fix: HKDF info layout per CORD-02 App A',r:'concord-topics',st:'merged',id:'1617'},
+    {t:'db: topics table migration (id 88)',r:'0xvector',st:'draft',id:'1617'},
+  ],
+  prs:[
+    {t:'Topics UI: chat-list-style panel + composer tags',r:'0xvector',st:'open',id:'1618'},
+    {t:'Sentire: per-topic screening rules',r:'sentire-plugin-topics',st:'merged',id:'1618'},
+    {t:'Armada interop: degrade topics to flat chat',r:'concord-topics',st:'draft',id:'1618'},
+  ],
+};
+const PJ={tab:'repos',q:'',st:'all',view:'grid'};
+
+const pinSvg='<svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M16 3l5 5-2.2.8-3.3 3.3.4 3.4-1.4 1.4-3-3L7 18.4 5.6 17l4.5-4.5-3-3L8.5 8l3.4.4 3.3-3.3z"/></svg>';
+const muteSvg='<svg class="ico" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22a2.4 2.4 0 002.4-2.4H9.6A2.4 2.4 0 0012 22zm7-5.3v.7H5v-.7l1.8-1.8V9.4a5.2 5.2 0 013.7-5V3.5a1.5 1.5 0 013 0v.9a5.2 5.2 0 013.7 5v5.5l1.8 1.8z"/></svg>';
+const ticksSvg='<svg class="ticks" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2 13l4 4L16 7M9 14.5l2 2L22 6.5"/></svg>';
+const clockSvg='<svg class="st-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>';
+const esc=s=>String(s).replace(/</g,'&lt;');
+function toast(msg){
+  const t=document.createElement('div');t.className='toast';
+  t.innerHTML='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12.5l5 5L20 6.5"/></svg><span>'+esc(msg)+'</span>';
+  $('#toasts').appendChild(t);
+  setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),320)},2400);
+}
+function avatarColor(n){const cs=['#4e8ac1','#c1554e','#4ea15b','#6b4f9e','#c19a4e'];let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))>>>0;return cs[h%cs.length]}
+function nowTime(){const d=new Date();return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+
+/* ---------- ripple (global delegate) ---------- */
+document.addEventListener('pointerdown',e=>{
+  if(REDUCED)return;
+  const h=e.target.closest('.rip-host,.ibtn,.row,.t-row,.tab,.new-topic,.join-btn,.bn-it,.ov-row,.dr-it,.ctx-it,.ecell,.ptab');
+  if(!h)return;
+  const r=h.getBoundingClientRect(),d=Math.max(r.width,r.height)*2.1,s=document.createElement('span');
+  s.className='ripple';const cs=getComputedStyle(h);
+  if(getComputedStyle(h).position==='static')h.style.position='relative';
+  if(!h.classList.contains('rip-host')){h.classList.add('rip-host')}
+  s.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;
+  h.appendChild(s);setTimeout(()=>s.remove(),520);
+},{passive:true});
+
+/* ---------- themes ---------- */
+function setTheme(n){
+  document.documentElement.dataset.theme=n;
+  document.querySelectorAll('.theme-dots i').forEach(d=>d.classList.toggle('on',d.dataset.th===n));
+  document.querySelectorAll('.st-th').forEach(d=>d.classList.toggle('on',d.dataset.stTheme===n));
+  try{localStorage.setItem('0xv.theme',n)}catch(e){}
+}
+function initThemeUI(){
+  $('#theme-dots').innerHTML=THEMES.map(t=>`<i data-th="${t.n}" style="background:${t.c};color:${t.c}" title="${t.n}"></i>`).join('');
+  $('#theme-dots').querySelectorAll('i').forEach(d=>d.onclick=()=>{setTheme(d.dataset.th);toast('Theme · '+d.dataset.th)});
+  $('#st-themes').innerHTML=THEMES.map(t=>`<div class="st-th" data-st-theme="${t.n}"><i style="background:${t.c}"></i>${t.n}</div>`).join('');
+  $('#st-themes').querySelectorAll('.st-th').forEach(d=>d.onclick=()=>setTheme(d.dataset.stTheme));
+  let saved='vector';try{saved=localStorage.getItem('0xv.theme')||'vector'}catch(e){}
+  setTheme(saved);
+}
+
+/* ---------- render: chat list ---------- */
+function filteredChats(){
+  const q=$('#g-search').value.trim().toLowerCase();
+  return S.chats.filter(c=>{
+    if(S.tab==='unread'&&!c.unread)return false;
+    if(S.tab==='groups'&&!(c.forum||c.group))return false;
+    if(q&&!(c.name.toLowerCase().includes(q)||(c.sub||'').toLowerCase().includes(q)))return false;
+    return true;
+  }).sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
+}
+function renderChats(){
+  const list=filteredChats();
+  $('#chat-rows').innerHTML=list.map((c,i)=>`
+    <div class="row rip-host row-in ${S.chat===c.id?'on':''}" data-chat="${c.id}" style="animation-delay:${Math.min(i*35,280)}ms">
+      <div class="av" style="background:${GRAD(c.color)}">${c.av}${c.online?'<span class="pres"></span>':''}</div>
+      <div class="r-main">
+        <div class="r-top"><span class="r-name">${esc(c.name)}</span>
+          ${c.muted?`<span class="r-ico">${muteSvg}</span>`:''}${c.pinned?`<span class="r-ico">${pinSvg}</span>`:''}
+          <span class="r-time ${c.unread?'unread':''}">${c.time}</span></div>
+        <div class="r-bottom"><span class="r-sub">${c.sub||'topics enabled · forum mode'}</span>
+          ${c.unread?`<span class="badge ${c.muted?'mut':''}">${c.unread}</span>`:''}</div>
+      </div>
+    </div>`).join('');
+  $('#chat-rows').querySelectorAll('.row').forEach(r=>{
+    r.onclick=()=>openChat(r.dataset.chat);
+    r.oncontextmenu=e=>{e.preventDefault();chatCtx(e.clientX,e.clientY,r.dataset.chat)};
+  });
+  syncBnav();
+}
+
+/* ---------- render: topics ---------- */
+function renderTopics(){
+  const c=S.chats.find(x=>x.id===S.chat)||S.chats[0];
+  const wrap=$('#topic-rows');
+  if(!c||!c.forum){wrap.innerHTML='';return}
+  const ts=[...S.topics].sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
+  let html='',sec=false;
+  ts.forEach((t,i)=>{
+    if(!t.pinned&&!sec){sec=true;html+='<div class="t-sec">All Topics</div>'}
+    const ty=t.type==='announce'?'📣':t.type==='voice'?'🎙️':'';
+    html+=`<div class="t-row rip-host row-in ${S.topic===t.id?'on':''}" data-topic="${t.id}" style="animation-delay:${Math.min(i*30,240)}ms">
+      <div class="t-ic" style="background:${GRAD(PALETTE[t.color])}">${t.icon}${ty?`<span class="ty">${ty}</span>`:''}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:6px"><span class="t-name ${t.closed?'closed':''}">${esc(t.name)}</span>
+          ${t.muted?`<span class="r-ico">${muteSvg}</span>`:''}${t.pinned?`<span class="r-ico">${pinSvg}</span>`:''}
+          <span class="r-time" style="margin-left:auto">${t.time||''}</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><span class="t-sub">${t.last||''}</span>
+          ${t.unread?`<span class="badge ${t.muted?'mut':''}" data-tbadge="${t.id}">${t.unread}</span>`:''}</div>
+      </div></div>`;
+  });
+  wrap.innerHTML=html;
+  wrap.querySelectorAll('.t-row').forEach(r=>{
+    r.onclick=()=>openTopic(r.dataset.topic);
+    r.oncontextmenu=e=>{e.preventDefault();topicCtx(e.clientX,e.clientY,r.dataset.topic)};
+  });
+}
+</script>
+<script>
+/* ---------- render: messages (grouping, tails, dividers, status) ---------- */
+function curMsgs(){return M[S.topic||S.chat]||(M[S.topic||S.chat]=[])}
+function hl(text){
+  if(!S.search)return text;
+  const q=esc(S.search);if(!q)return text;
+  return text.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'),'<mark>$1</mark>');
+}
+function bubble(m,first,last,anim){
+  const rq=m.reply?`<div class="rq"><div class="ra">${esc(m.reply.a)}</div><div class="rx">${esc(m.reply.x)}</div></div>`:'';
+  const author=(first&&m.who==='in'&&m.name)?`<div class="author ${m.cls||'a0'}">${esc(m.name)}</div>`:'';
+  let body='';
+  if(m.kind==='voice'){
+    const bars=WAVE.map(h=>`<i style="height:${h}px"></i>`).join('');
+    body=`<div class="vmsg"><button class="vplay" data-vplay><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg></button>
+      <div class="vwave">${bars}</div><span class="vt-time">0:${String(m.dur||9).padStart(2,'0')}</span></div>
+      <span class="vt-btn">▸ transcription (on-device Whisper)</span><div class="vt">${m.vt||''}</div>`;
+  }else if(m.kind==='link'){
+    body=`${hl(esc(m.text))}<div class="lp"><div><div class="lt">${esc(m.link.t)}</div><div class="ld">${esc(m.link.d)}</div></div></div>`;
+  }else if(m.kind==='img'){
+    body=`<div class="imgbub"><div class="hexpat"></div><span class="cap">ENCRYPTED BLOB · BLOSSOM · sha256:9f2c…</span></div>${hl(esc(m.text))}`;
+  }else body=hl(esc(m.text));
+  const rx=m.rx?`<div class="rx-row">${Object.entries(m.rx).map(([e,n])=>
+    `<span class="rx" data-rx="${e}">${e}<span class="n">${n}</span></span>`).join('')}</div>`:'';
+  const st=m.status==='sending'?clockSvg:m.status==='sent'?ticksSvg.replace('class="ticks"','class="ticks st-sent"'):m.status==='ack'?ticksSvg.replace('class="ticks"','class="ticks st-ack"'):(m.who==='out'?ticksSvg.replace('class="ticks"','class="ticks st-ack"'):'');
+  const relayOk=(m.who==='out'&&m.status==='ack'&&N.live)?'<span class="relay-ok" title="relay-acknowledged">⇄</span>':'';
+  const edited=m.edited?'<span class="edited">(edited)</span>':'';
+  const meta=`<span class="meta">${edited} ${m.time||''} ${st}${relayOk}</span>`;
+  const tool=m.who!=='svc'?`<div class="htool">
+    <button data-ha="rx" title="React">👍</button><button data-ha="re" title="Reply">↩</button>
+    <button data-ha="fw" title="Forward">➦</button><button data-ha="pin" title="Pin">📌</button>
+    <button data-ha="more" title="More">⋯</button></div>`:'';
+  return `<div class="msg ${m.who} ${last?'last':''} ${anim?(m.who==='out'?'msg-out-anim':'msg-in-anim'):''}" data-id="${m.id}">
+    ${m.who==='in'?`<div class="mav ${last?'':'ghost'}" style="background:${GRAD(avatarColor(m.name||'?'))}">${(m.name||'?')[0].toUpperCase()}</div>`:''}
+    <div class="bub">${tool}<div class="sw-hint"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 14l-5-5 5-5M4 9h9a7 7 0 017 7v2"/></svg></div>${rq}${author}${body}${meta}${rx}</div></div>`;
+}
+function renderMsgs(animLast){
+  const msgs=curMsgs(),box=$('#msgs');
+  let html='<div class="mwrap">',prev=null;
+  const n=msgs.length;
+  let newIdx=-1;
+  if(S.newBelow>0){let need=S.newBelow;
+    for(let i=n-1;i>=0;i--){const w=msgs[i].who;
+      if(w==='in'||w==='svc'){need--;if(need<=0){newIdx=i;break}}}}
+  msgs.forEach((m,i)=>{
+    if(i===newIdx&&newIdx>0)html+='<div class="new-dv">NEW MESSAGES</div>';
+    if(m.who==='day'){html+=`<div class="day-dv"><span>${esc(m.text)}</span></div>`;prev=m;return}
+    if(m.who==='svc'){html+=`<div class="svc"><span>${esc(m.text)}</span></div>`;prev=m;return}
+    const first=!prev||prev.who!=='in'&&prev.who!=='out'||prev.who!==m.who||prev.name!==m.name;
+    const nx=msgs[i+1];
+    const last=!nx||nx.who==='day'||nx.who==='svc'||nx.who!==m.who||nx.name!==m.name;
+    html+=bubble(m,first,last,animLast&&i===n-1);
+    prev=m;
+  });
+  html+='</div>';
+  box.innerHTML=html;
+  bindMsgInteractions();
+  if(animLast)box.scrollTop=box.scrollHeight;
+}
+function bindMsgInteractions(){
+  document.querySelectorAll('#msgs .rx').forEach(el=>el.onclick=e=>{
+    e.stopPropagation();
+    el.classList.toggle('mine');
+    const n=el.querySelector('.n');n.textContent=+n.textContent+(el.classList.contains('mine')?1:-1);
+    el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop');
+  });
+  document.querySelectorAll('#msgs .bub').forEach(b=>{
+    b.oncontextmenu=e=>{e.preventDefault();msgCtx(e.clientX,e.clientY,b.closest('.msg').dataset.id)};
+    b.ondblclick=e=>{quickReact(b.closest('.msg').dataset.id,'👍',e.clientX,e.clientY)};
+  });
+  document.querySelectorAll('#msgs .htool button').forEach(bt=>bt.onclick=e=>{
+    e.stopPropagation();
+    const bub=bt.closest('.bub'),id=bub.closest('.msg').dataset.id,act=bt.dataset.ha;
+    const m=curMsgs().find(z=>z.id===id);if(!m)return;
+    if(act==='rx')quickReact(id,'👍',e.clientX,e.clientY);
+    else if(act==='re')setReply(m.who==='out'?'you':m.name||'anon',m.text||m.vt||'',m.id);
+    else if(act==='fw')toast('Forward → sealed re-wrap to any chat');
+    else if(act==='pin')pinMsg(m);
+    else msgCtx(e.clientX,e.clientY,id);
+  });
+  document.querySelectorAll('#msgs .vt-btn').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();
+    const tr=b.nextElementSibling;tr.classList.toggle('open');
+    b.textContent=tr.classList.contains('open')?'▾ hide transcription':'▸ transcription (on-device Whisper)';
+  });
+  document.querySelectorAll('#msgs [data-vplay]').forEach(b=>b.onclick=e=>{e.stopPropagation();playVoice(b)});
+  document.querySelectorAll('#msgs .rq').forEach(r=>r.onclick=()=>toast('Jump to original · get_messages_around_id'));
+}
+function playVoice(btn){
+  const wave=btn.parentElement.querySelector('.vwave'),bars=[...wave.children];
+  const time=btn.parentElement.querySelector('.vt-time');
+  if(btn.dataset.playing){clearInterval(+btn.dataset.playing);delete btn.dataset.playing;
+    btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>';return}
+  btn.innerHTML='<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
+  let i=0;bars.forEach(b=>b.classList.remove('pl'));
+  const iv=setInterval(()=>{
+    if(i>=bars.length){clearInterval(iv);delete btn.dataset.playing;
+      btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>';
+      time.textContent='0:'+String(time.dataset.d||'09').padStart(2,'0');bars.forEach(b=>b.classList.remove('pl'));return}
+    bars[i].classList.add('pl');i++;
+  },130);
+  btn.dataset.playing=iv;
+}
+function quickReact(id,emoji,x,y){
+  reactTo(id,emoji);
+  if(x!==undefined&&!REDUCED){
+    const f=document.createElement('div');f.className='fly-rx';f.textContent=emoji;
+    f.style.left=(x-13)+'px';f.style.top=(y-13)+'px';document.body.appendChild(f);
+    setTimeout(()=>f.remove(),900);
+  }
+  N.emitReaction(id,emoji);
+}
+function reactTo(id,emoji){
+  const m=curMsgs().find(z=>z.id===id);if(!m)return;
+  m.rx=m.rx||{};
+  m.rx[emoji]=(m.rx[emoji]||0)+1;
+  renderMsgs();
+  const chip=[...document.querySelectorAll(`.msg[data-id="${id}"] .rx`)].find(c=>c.dataset.rx===emoji);
+  if(chip){chip.classList.add('mine','pop')}
+}
+
+/* ---------- pins ---------- */
+function pinMsg(m){
+  const key=S.topic||S.chat;
+  S.pins[key]=S.pins[key]||[];
+  if(!S.pins[key].includes(m.text))S.pins[key].push(m.text);
+  renderPinsBar();toast('Pinned · kind 3312 to the registry');
+  N.emitPin(m);
+}
+let pinIdx=0;
+function renderPinsBar(){
+  const pins=S.pins[S.topic||S.chat]||[];
+  const bar=$('#pins-bar');
+  if(!pins.length){bar.classList.remove('open');return}
+  bar.classList.add('open');
+  pinIdx=pinIdx%pins.length;
+  $('#pins-text').textContent=pins[pinIdx];
+  $('#pins-count').textContent=pins.length>1?(pinIdx+1)+'/'+pins.length:'';
+}
+$('#pins-bar').onclick=()=>{
+  const pins=S.pins[S.topic||S.chat]||[];
+  if(pins.length>1){pinIdx=(pinIdx+1)%pins.length;renderPinsBar()}
+  else toast('Jump to pinned · get_messages_around_id');
+};
+
+/* ---------- open chat / topic ---------- */
+function openChat(id){
+  const c=S.chats.find(x=>x.id===id);if(!c)return;
+  S.chat=id;S.topic=null;S.reply=null;S.edit=null;S.newBelow=c.unread||0;
+  c.unread=0;
+  renderChats();
+  if(c.forum){
+    $('#tp-name').textContent=c.name;$('#tp-sub').textContent='1,204 members · topics on';
+    $('#tp-av').textContent=c.av;$('#tp-av').style.background=GRAD(c.color);
+    renderTopics();
+    if(innerWidth<=900)$('#topics-col').classList.add('open');
+    const target=S.topics.find(t=>t.unread>0)||S.topics[2];
+    openTopic(target.id,true);
+    if(innerWidth>900)$('#convo-live').classList.add('open');
+    $('#convo-empty').style.display='none';
+  }else{
+    $('#topics-col').classList.remove('open');
+    $('#convo-empty').style.display='none';
+    $('#convo-live').classList.add('open');
+    if(innerWidth<=900)$('#convo-col').classList.add('open');
+    $('#crumb-g').textContent=c.name;
+    $('#crumb-sep').style.display='none';$('#crumb-t').textContent='';
+    $('#ann-chip').style.display='none';
+    $('#cv-sub-t').textContent=c.online?'online':c.bot?'bot · always on':'last seen recently';
+    $('#cp-topic').style.display='none';
+    $('#voice-bar').classList.remove('open');
+    renderPinsBar();renderMsgs();
+    const box=$('#msgs');box.classList.add('instant');box.scrollTop=box.scrollHeight;
+    requestAnimationFrame(()=>box.classList.remove('instant'));
+  }
+  syncBnav();
+}
+function openTopic(id,silent){
+  const t=S.topics.find(x=>x.id===id);if(!t)return;
+  S.topic=id;S.reply=null;S.edit=null;S.newBelow=t.unread||0;
+  if(!silent&&innerWidth<=900)$('#convo-col').classList.add('open');
+  $('#convo-empty').style.display='none';
+  $('#convo-live').classList.add('open');
+  $('#crumb-g').textContent='Vector HQ';
+  $('#crumb-sep').style.display='';
+  $('#crumb-t').textContent=t.name;
+  $('#ann-chip').style.display=t.type==='announce'?'':'none';
+  $('#cv-sub-t').textContent=t.type==='announce'?'announcement channel · only admins post':
+    t.type==='voice'?'voice room · persistent':(t.closed?'closed · read-only':'topic · E2E channel');
+  const ct=$('#cp-topic');ct.style.display='block';ct.textContent=`${t.icon} ${t.name}`;
+  renderTopics();
+  const badge=document.querySelector(`[data-tbadge="${id}"]`);
+  if(badge){badge.classList.add('clear');setTimeout(()=>{t.unread=0;t.at=0;renderTopics()},280)}
+  else{t.unread=0;t.at=0}
+  $('#voice-bar').classList.toggle('open',t.type==='voice');
+  if(t.type==='voice'){$('#vb-name').textContent=t.name}
+  renderPinsBar();renderMsgs();
+  const box=$('#msgs');box.classList.add('instant');box.scrollTop=box.scrollHeight;
+  requestAnimationFrame(()=>box.classList.remove('instant'));
+}
+$('#vb-join').onclick=()=>{
+  S.voiceJoined=!S.voiceJoined;
+  const b=$('#vb-join');
+  b.textContent=S.voiceJoined?'Leave':'Join';
+  b.classList.toggle('joined',S.voiceJoined);
+  $('#vb-sub').textContent=S.voiceJoined?'you + 3 talking · per-sender keys rotated on join':'3 talking · blind LiveKit broker · keys per sender (CORD-07)';
+  toast(S.voiceJoined?'Joined voice · E2E per-sender key active':'Left voice · sender key burned');
+  N.emitPresence(S.voiceJoined);
+};
+</script>
+<script>
+/* ---------- context menus ---------- */
+const ctx=$('#ctx');
+function showCtx(x,y,items,rxRow){
+  ctx.innerHTML=(rxRow?`<div class="ctx-rx">${QUICK_RX.map(e=>`<button data-qrx="${e}">${e}</button>`).join('')}</div>`:'')+
+    items.map((it,i)=>`<button class="ctx-it ${it.d?'dng':''}" data-ci="${i}"><span class="i">${it.i}</span>${it.l}</button>`).join('');
+  ctx.classList.add('open');
+  const w=ctx.offsetWidth,h=ctx.offsetHeight;
+  const px=Math.min(x,innerWidth-w-10),py=Math.min(y,innerHeight-h-10);
+  ctx.style.left=px+'px';ctx.style.top=py+'px';
+  ctx.style.transformOrigin=(x>innerWidth/2?'right':'left')+' '+(y>innerHeight/2?'bottom':'top');
+  ctx.querySelectorAll('.ctx-it').forEach(el=>el.onclick=()=>{ctx.classList.remove('open');items[+el.dataset.ci].fn()});
+  if(rxRow)ctx.querySelectorAll('[data-qrx]').forEach(el=>el.onclick=()=>{ctx.classList.remove('open');rxRow(el.dataset.qrx,el)});
+}
+document.addEventListener('click',e=>{if(!e.target.closest('#ctx'))ctx.classList.remove('open')});
+document.addEventListener('scroll',()=>ctx.classList.remove('open'),{passive:true,capture:true});
+function msgCtx(x,y,id){
+  const m=curMsgs().find(z=>z.id===id);if(!m||m.who==='svc'||m.who==='day')return;
+  const mine=m.who==='out';
+  showCtx(x,y,[
+    {k:'re',l:'Reply',i:'↩',fn:()=>setReply(mine?'you':m.name||'anon',m.text||m.vt||'',m.id)},
+    {k:'copy',l:'Copy text',i:'📋',fn:()=>{navigator.clipboard?.writeText(m.text||'')?.catch(()=>{});toast('Copied')}},
+    {k:'fw',l:'Forward',i:'➦',fn:()=>toast('Forward → sealed re-wrap to any chat')},
+    {k:'pin',l:'Pin',i:'📌',fn:()=>pinMsg(m)},
+    ...(mine?[{k:'edit',l:'Edit',i:'✏️',fn:()=>startEdit(m)},
+      {k:'del',l:'Delete',i:'🗑',d:true,fn:()=>deleteMsg(m)}]:[]),
+  ],(e)=>quickReact(id,e,x,y));
+}
+function topicCtx(x,y,id){
+  const t=S.topics.find(z=>z.id===id);if(!t)return;
+  showCtx(x,y,[
+    {k:'pin',l:t.pinned?'Unpin':'Pin',i:'📌',fn:()=>{t.pinned=!t.pinned;renderTopics();toast(t.pinned?'Pinned':'Unpinned')}},
+    {k:'mute',l:t.muted?'Unmute':'Mute',i:'🔔',fn:()=>{t.muted=!t.muted;renderTopics();toast(t.muted?'Muted':'Unmuted')}},
+    {k:'read',l:'Mark as read',i:'✓',fn:()=>{t.unread=0;t.at=0;renderTopics()}},
+    {k:'close',l:t.closed?'Reopen topic':'Close topic',i:'🔒',fn:()=>{t.closed=!t.closed;t.last=t.closed?'topic closed':'topic reopened';
+      N.emitTopicOp(t.closed?'close':'reopen',t);renderTopics();if(S.topic===id)openTopic(id,true)}},
+    {k:'del',l:'Delete topic',i:'🗑',d:true,fn:()=>{N.emitTopicOp('delete',t);
+      S.topics=S.topics.filter(z=>z.id!==id);delete M[id];
+      if(S.topic===id)openTopic('general',true);renderTopics();toast('Topic deleted · registry re-folded')}},
+  ]);
+}
+function chatCtx(x,y,id){
+  const c=S.chats.find(z=>z.id===id);if(!c)return;
+  showCtx(x,y,[
+    {k:'pin',l:c.pinned?'Unpin chat':'Pin chat',i:'📌',fn:()=>{c.pinned=!c.pinned;renderChats()}},
+    {k:'mute',l:c.muted?'Unmute':'Mute',i:'🔔',fn:()=>{c.muted=!c.muted;renderChats()}},
+    {k:'read',l:'Mark as read',i:'✓',fn:()=>{if(c.forum)S.topics.forEach(t=>{t.unread=0;t.at=0});c.unread=0;renderChats();renderTopics()}},
+    {k:'arch',l:'Archive',i:'🗄',fn:()=>toast('Archived locally — relays never know')},
+    {k:'leave',l:'Leave',i:'🚪',d:true,fn:()=>{N.emitLeave(c);toast('Leaving re-keys every channel you were in (CORD-06)')}},
+  ]);
+}
+
+/* ---------- swipe-to-reply (pointer, rubber-band) ---------- */
+(function(){
+  const box=$('#msgs');let st=null;
+  box.addEventListener('pointerdown',e=>{
+    const bub=e.target.closest('.bub');if(!bub||e.button===2)return;
+    const msg=bub.closest('.msg');if(!msg||msg.classList.contains('in')&&false)return;
+    st={bub,msg,x:e.clientX,y:e.clientY,moved:false,id:e.pointerId};
+  },{passive:true});
+  box.addEventListener('pointermove',e=>{
+    if(!st||e.pointerId!==st.id)return;
+    const dx=e.clientX-st.x,dy=e.clientY-st.y;
+    if(!st.moved&&Math.abs(dx)>14&&Math.abs(dx)>Math.abs(dy)*1.4){st.moved=true;st.dir=dx>0?1:-1;
+      if((st.dir>0&&!st.msg.classList.contains('in'))||(st.dir<0&&st.msg.classList.contains('in'))){st.moved=false;return}}
+    if(st.moved){
+      const pull=Math.sign(dx)*Math.min(Math.abs(dx)*.55,86);
+      st.bub.style.transition='none';st.bub.style.transform=`translateX(${pull}px)`;
+      const hint=st.bub.querySelector('.sw-hint');
+      if(hint)hint.style.transform=`translateY(-50%) scale(${Math.min(Math.abs(pull)/52,1.15)})`;
+      e.preventDefault();
+    }
+  },{passive:false});
+  const end=e=>{
+    if(!st)return;
+    const bub=st.bub,wasMoved=st.moved;
+    const m=curMsgs().find(z=>z.id===st.msg.dataset.id);
+    st=null;
+    bub.style.transition='';bub.style.transform='';
+    const hint=bub.querySelector('.sw-hint');if(hint)hint.style.transform='';
+    if(wasMoved&&m&&m.who!=='svc')setReply(m.who==='out'?'you':m.name||'anon',m.text||m.vt||'',m.id);
+  };
+  box.addEventListener('pointerup',end);box.addEventListener('pointercancel',end);
+})();
+
+/* ---------- composer ---------- */
+const cp=$('#cp-input'),sendBtn=$('#send-btn');
+function setReply(name,text,id){
+  S.reply={name,text,id};S.edit=null;
+  updateReplyBar();cp.focus();
+}
+function startEdit(m){
+  S.edit=m;S.reply={name:'EDIT MESSAGE',text:m.text};
+  cp.value=m.text;cp.dispatchEvent(new Event('input'));
+  updateReplyBar();cp.focus();
+}
+function deleteMsg(m){
+  const arr=curMsgs(),i=arr.findIndex(z=>z.id===m.id);
+  if(i>-1)arr.splice(i,1);
+  renderMsgs();N.emitDelete(m);toast('Deleted · kind 5 tombstone broadcast');
+}
+function updateReplyBar(){
+  const bar=$('#cp-reply');
+  if(S.reply){bar.classList.add('open');bar.classList.toggle('edit-mode',!!S.edit);
+    $('#cp-reply-a').textContent=S.edit?'EDIT MESSAGE · kind 3302':S.reply.name;
+    $('#cp-reply-x').textContent=S.reply.text}
+  else bar.classList.remove('open','edit-mode');
+}
+$('#cp-reply-x-btn').onclick=()=>{S.reply=null;S.edit=null;cp.value='';cp.dispatchEvent(new Event('input'));updateReplyBar()};
+cp.addEventListener('input',()=>{
+  cp.style.height='auto';cp.style.height=Math.min(cp.scrollHeight,132)+'px';
+  const has=cp.value.trim().length>0;
+  $('#ico-mic').style.display=has?'none':'';
+  $('#ico-send').style.display=has?'':'none';
+  sendBtn.style.transform=has?'rotate(0deg)':'';
+});
+cp.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();doSend()}});
+async function doSend(){
+  const text=cp.value.trim();
+  if(!text){toast('Hold to record voice · Whisper transcribes on-device');return}
+  const key=S.topic||S.chat;if(!key)return;
+  const t=S.topics.find(x=>x.id===S.topic);
+  if(t&&t.closed){toast('Topic is closed — read-only');return}
+  if(t&&t.type==='announce'){/* admins only — demo user is admin in HQ */}
+  const m={id:'u'+Date.now(),who:'out',text,time:nowTime(),status:'sending'};
+  if(S.reply&&!S.edit)m.reply={a:S.reply.name,x:S.reply.text};
+  if(S.ttl)m.ttl=S.ttl;
+  if(S.edit){
+    S.edit.text=text;S.edit.edited=true;
+    N.emitEdit(S.edit);
+    S.edit=null;S.reply=null;updateReplyBar();
+    cp.value='';cp.dispatchEvent(new Event('input'));
+    renderMsgs();toast('Edit broadcast · kind 3302');return;
+  }
+  const replyTo=S.reply?S.reply.id:null;
+  curMsgs().push(m);
+  S.reply=null;updateReplyBar();
+  cp.value='';cp.dispatchEvent(new Event('input'));
+  renderMsgs(true);
+  N.send(text,replyTo);
+  setTimeout(()=>{m.status='sent';const mm=document.querySelector(`.msg[data-id="${m.id}"]`);if(mm)renderMsgs()},420);
+  setTimeout(()=>{m.status='ack';renderMsgs()},950);
+  if(key==='alice'||key==='general'||key==='t-dev')simulateReply(key);
+}
+function simulateReply(key){
+  const pool={
+    alice:{name:'Alice',cls:'a1',lines:['wrapped and sealed. even the timing metadata is padded 🎁','yesss. and the SDK just sees community.topics() — zero wire knowledge']},
+    general:{name:'JSKitty',cls:'a0',lines:['ship it 🚢','relays stay dumb, clients stay free. that\'s the whole design']},
+    't-dev':{name:'BonesGit',cls:'a2',lines:['ack. add the SessionGuard test and I\'ll review','migration id bumped — test is green']},
+  }[key];if(!pool)return;
+  setTimeout(()=>{
+    if((S.topic||S.chat)!==key)return;
+    const arr=curMsgs();
+    const tp={id:'tp'+Date.now(),who:'in',name:pool.name,cls:pool.cls,typing:true};
+    arr.push(tp);renderMsgs(true);
+    setTimeout(()=>{
+      const i=arr.indexOf(tp);if(i>-1)arr.splice(i,1);
+      arr.push({id:'r'+Date.now(),who:'in',name:pool.name,cls:pool.cls,
+        text:pool.lines[Math.floor(Math.random()*pool.lines.length)],time:nowTime()});
+      renderMsgs(true);
+    },1400+Math.random()*900);
+  },900);
+}
+/* typing bubble renderer hook — treat m.typing */
+const _bubble=bubble;
+bubble=function(m,first,last,anim){
+  if(m.typing)return `<div class="msg in last msg-in-anim"><div class="mav" style="background:${GRAD(avatarColor(m.name||'?'))}">${(m.name||'?')[0].toUpperCase()}</div><div class="bub"><span class="typing"><i></i><i></i><i></i></span></div></div>`;
+  return _bubble(m,first,last,anim);
+};
+
+/* ---------- hold-to-record ---------- */
+(function(){
+  let rec=null;
+  const bar=$('#rec-bar'),wave=$('#rec-wave');
+  wave.innerHTML=Array.from({length:34},()=>'<i style="height:4px"></i>').join('');
+  const bars=[...wave.children];
+  function startRec(e){
+    if(cp.value.trim())return;
+    rec={t0:Date.now(),x:e.clientX,cancel:false};
+    bar.classList.add('open');sendBtn.classList.add('rec');
+    $('#crow').style.visibility='hidden';
+    rec.iv=setInterval(()=>{
+      const s=Math.floor((Date.now()-rec.t0)/1000);
+      $('#rec-time').textContent=Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+      bars.forEach(b=>{b.style.height=(4+Math.random()*22)+'px'});
+    },120);
+  }
+  function moveRec(e){
+    if(!rec)return;
+    const dx=e.clientX-rec.x;
+    rec.cancel=dx<-90;
+    bar.classList.toggle('cancel',rec.cancel);
+    $('#rec-hint').textContent=rec.cancel?'RELEASE TO CANCEL':'‹ SLIDE TO CANCEL';
+  }
+  function endRec(){
+    if(!rec)return;
+    clearInterval(rec.iv);
+    const dur=Math.max(1,Math.round((Date.now()-rec.t0)/1000)),cancelled=rec.cancel;
+    rec=null;bar.classList.remove('open','cancel');sendBtn.classList.remove('rec');
+    $('#crow').style.visibility='';
+    if(cancelled){toast('Voice note discarded');return}
+    const key=S.topic||S.chat;if(!key)return;
+    curMsgs().push({id:'v'+Date.now(),who:'out',kind:'voice',time:nowTime(),dur:Math.min(dur,59),
+      vt:'“Transcription appears here once on-device Whisper finishes — audio never leaves E2E.”',status:'sent'});
+    renderMsgs(true);toast('Voice note sent · opus + NIP-44');
+  }
+  sendBtn.addEventListener('pointerdown',e=>{
+    if(cp.value.trim())return;
+    const t=setTimeout(()=>startRec(e),220);
+    const up=()=>{clearTimeout(t);
+      sendBtn.removeEventListener('pointerup',up);sendBtn.removeEventListener('pointerleave',up)};
+    sendBtn.addEventListener('pointerup',up);sendBtn.addEventListener('pointerleave',up);
+  });
+  addEventListener('pointermove',moveRec,{passive:true});
+  addEventListener('pointerup',()=>{if(rec)endRec()});
+})();
+sendBtn.onclick=()=>{if(cp.value.trim())doSend()};
+
+/* ---------- emoji / slash / ttl ---------- */
+$('#emoji-grid2').innerHTML=EMOJI.map(e=>`<span class="ecell">${e}</span>`).join('');
+document.querySelectorAll('#emoji-grid2 .ecell').forEach(el=>el.onclick=()=>{
+  cp.value+=el.textContent;cp.dispatchEvent(new Event('input'));cp.focus();
+});
+$('#cp-emoji').onclick=e=>{e.stopPropagation();$('#emoji-pop').classList.toggle('open');$('#slash-pop').classList.remove('open')};
+$('#cp-slash').onclick=e=>{e.stopPropagation();$('#slash-pop').classList.toggle('open');$('#emoji-pop').classList.remove('open')};
+document.querySelectorAll('.slash-it').forEach(el=>el.onclick=()=>{
+  $('#slash-pop').classList.remove('open');
+  toast(el.dataset.cmd+' → Sentire executes in-topic');
+});
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#emoji-pop')&&!e.target.closest('#cp-emoji'))$('#emoji-pop').classList.remove('open');
+  if(!e.target.closest('#slash-pop')&&!e.target.closest('#cp-slash'))$('#slash-pop').classList.remove('open');
+});
+$('#cp-attach').onclick=()=>toast('Attach → encrypted Blossom upload · hash-addressed · EXIF stripped');
+$('#cp-ttl').onclick=()=>$('#modal-bg3').classList.add('open');
+document.querySelectorAll('#ttl-opts .ttl-opt').forEach(el=>el.onclick=()=>{
+  document.querySelectorAll('#ttl-opts .ttl-opt').forEach(x=>x.classList.remove('on'));
+  el.classList.add('on');S.ttl=+el.dataset.ttl;
+});
+$('#ttl-done').onclick=()=>{
+  $('#modal-bg3').classList.remove('open');
+  $('#ttl-val').textContent=S.ttl?(S.ttl<60?S.ttl+'s':S.ttl<3600?S.ttl/60+'m':S.ttl<86400?S.ttl/3600+'h':'1d'):'off';
+  $('#ttl-chip').classList.toggle('on',!!S.ttl);
+  toast(S.ttl?'Messages expire '+$('#ttl-val').textContent+' after send (CORD-08)':'Disappearing messages off');
+};
+$('#ttl-chip').onclick=()=>$('#modal-bg3').classList.add('open');
+</script>
+<script>
+/* ================================================================
+   NOSTR / CONCORD LAYER — real keypair, NIP-44 v2, NIP-59 gift
+   wraps, HKDF channel keys (CORD-02), live relay websockets.
+   DEMO mode simulates the wire locally; LIVE hits real relays.
+   ================================================================ */
+const N={
+  sk:null, pk:null, npub:'', nsec:'', live:false, nt:null,
+  channelId:null, epoch:7, convKey:null,
+  relays:[
+    {url:'wss://relay.damus.io',status:'off',ws:null},
+    {url:'wss://nos.lol',status:'off',ws:null},
+    {url:'wss://ditto.relay.example',status:'off',ws:null},
+  ],
+  log:[],
+};
+const hex=a=>[...a].map(b=>b.toString(16).padStart(2,'0')).join('');
+const unhex=s=>new Uint8Array(s.match(/../g).map(b=>parseInt(b,16)));
+const te=new TextEncoder();
+const randHex=n=>hex(crypto.getRandomValues(new Uint8Array(n)));
+async function sha256hex(s){return hex(new Uint8Array(await crypto.subtle.digest('SHA-256',te.encode(s))))}
+function epochBE(n){const b=new Uint8Array(8);new DataView(b.buffer).setUint32(4,n);return b}
+async function hkdfChannelKey(rootHex,channelIdHex,epoch){
+  const key=await crypto.subtle.importKey('raw',unhex(rootHex),'HKDF',false,['deriveBits']);
+  const info=new Uint8Array([...te.encode('concord/channel'),0,...unhex(channelIdHex),...epochBE(epoch)]);
+  const bits=await crypto.subtle.deriveBits({name:'HKDF',hash:'SHA-256',salt:new Uint8Array(0),info},key,256);
+  return hex(new Uint8Array(bits));
+}
+function evLog(dir,kind,desc){
+  const tm=new Date().toLocaleTimeString('en-GB',{hour12:false});
+  N.log.unshift({tm,dir,kind,desc});if(N.log.length>60)N.log.pop();
+  const el=$('#evlog');if(!el)return;
+  el.innerHTML=N.log.map(e=>`<div class="ev"><span class="tm">${e.tm}</span><span class="dir ${e.dir==='→'?'out2':'in2'}">${e.dir}</span> <span class="kd">${e.kind}</span> <span class="ds">${esc(e.desc)}</span></div>`).join('');
+}
+async function initNostr(){
+  N.sk=randHex(32);
+  N.channelId=await sha256hex('0xvector:hq:genesis');
+  const root=await sha256hex(N.sk+':root');
+  N.convKey=await hkdfChannelKey(root,N.channelId,N.epoch);
+  const cdns=['https://esm.sh/nostr-tools@2.10.4','https://cdn.jsdelivr.net/npm/nostr-tools@2.10.4/+esm'];
+  for(const u of cdns){try{N.nt=await import(u);break}catch(e){}}
+  if(N.nt){
+    N.pk=N.nt.getPublicKey(unhex(N.sk));
+    N.npub=N.nt.nip19.npubEncode(N.pk);
+    N.nsec=N.nt.nip19.nsecEncode(unhex(N.sk));
+  }else{
+    N.pk=await sha256hex('pk'+N.sk);
+    N.npub='npub1'+N.sk.slice(0,50);
+    N.nsec='nsec1'+N.sk.slice(0,50);
+  }
+  renderInspectorId();
+  evLog('←','init','keypair generated · channel key via HKDF(concord/channel · epoch '+N.epoch+')');
+}
+async function buildChain(content,topicId,kind=9,extraTags=[]){
+  const now=Math.floor(Date.now()/1000);
+  const tags=[['channel',N.channelId],['epoch',String(N.epoch)],...extraTags];
+  if(topicId)tags.push(['topic',topicId]);
+  if(S.ttl)tags.push(['expiration',String(now+S.ttl)]);
+  const rumor={pubkey:N.pk,kind,created_at:now,tags,content};
+  let seal,wrap;
+  if(N.nt){
+    const sealed=N.nt.nip44.v2.encrypt(JSON.stringify(rumor),unhex(N.convKey));
+    seal={pubkey:N.pk,kind:kind+1000,created_at:now,tags:[],content:sealed};
+    seal.id=await sha256hex(JSON.stringify(seal));
+    const ephSk=N.nt.generateSecretKey();
+    const conv=N.nt.nip44.v2.utils.getConversationKey(ephSk,N.pk);
+    const wrapped=N.nt.nip44.v2.encrypt(JSON.stringify(seal),conv);
+    wrap={pubkey:N.nt.getPublicKey(ephSk),kind:1059,created_at:now+Math.floor(Math.random()*172800)-86400,tags:[['p',N.pk]],content:wrapped};
+    wrap.id=await sha256hex(JSON.stringify(wrap));
+  }else{
+    seal={id:await sha256hex('seal'+Math.random()),kind:kind+1000};
+    wrap={id:await sha256hex('wrap'+Math.random()),kind:1059};
+  }
+  return {rumor,seal,wrap};
+}
+function publish(wrap){
+  if(!N.live){evLog('→','kind '+wrap.kind,'gift wrap (demo) · '+wrap.id.slice(0,12)+'…');return}
+  const frame=JSON.stringify(['EVENT',wrap]);let sent=0;
+  N.relays.forEach(r=>{if(r.status==='on'&&r.ws){try{r.ws.send(frame);sent++}catch(e){}}});
+  evLog('→','kind '+wrap.kind,'gift wrap → '+sent+' relay(s) · '+wrap.id.slice(0,12)+'…');
+}
+N.send=async function(text,replyId){
+  const topicId=S.chat==='hq'?S.topic:null;
+  const extra=replyId?[['e',replyId,'','reply']]:[];
+  const chain=await buildChain(text,topicId,9,extra);
+  const t=S.topics.find(x=>x.id===topicId);
+  const desc=`msg → ${t?t.name:'chat'}${topicId&&topicId!=='general'?' · ["topic","'+topicId.slice(0,12)+'…"]':' · General (no tag)'}${S.ttl?' · expires '+S.ttl+'s':''}`;
+  evLog('→','kind 9',desc);
+  publish(chain.wrap);
+};
+N.emitTopicCreate=async function(t){
+  const chain=await buildChain(JSON.stringify({name:t.name,icon:t.icon,color:t.color,type:t.type||'discussion'}),null,3310,[['d',t.id]]);
+  evLog('→','kind 3310','topic registry fold · "'+t.name+'"');
+  publish(chain.wrap);
+};
+N.emitTopicOp=async function(op,t){
+  const chain=await buildChain('',null,3311,[['topic-op',op],['topic',t.id]]);
+  evLog('→','kind 3311','topic-op '+op+' · '+t.name);
+  publish(chain.wrap);
+};
+N.emitEdit=async function(m){
+  const chain=await buildChain(m.text,S.chat==='hq'?S.topic:null,3302,[['e',m.id]]);
+  evLog('→','kind 3302','edit · replaces '+m.id.slice(0,10)+'…');
+  publish(chain.wrap);
+};
+N.emitDelete=async function(m){
+  const chain=await buildChain('',S.chat==='hq'?S.topic:null,5,[['e',m.id]]);
+  evLog('→','kind 5','tombstone · '+m.id.slice(0,10)+'…');
+  publish(chain.wrap);
+};
+N.emitPin=async function(m){
+  const chain=await buildChain('',S.chat==='hq'?S.topic:null,3312,[['pin',m.id]]);
+  evLog('→','kind 3312','pin · '+m.id.slice(0,10)+'…');
+  publish(chain.wrap);
+};
+N.emitReaction=async function(msgId,emoji){
+  const chain=await buildChain(emoji,S.chat==='hq'?S.topic:null,7,[['e',msgId]]);
+  evLog('→','kind 7','reaction '+emoji);
+  publish(chain.wrap);
+};
+N.emitPresence=async function(joined){
+  const chain=await buildChain(joined?'presence:join':'presence:leave',S.topic,23313,[]);
+  evLog('→','kind 23313','voice presence '+(joined?'join':'leave')+' (ephemeral)');
+  publish(chain.wrap);
+};
+N.emitLeave=async function(c){
+  const chain=await buildChain('member removal → rekey all held channels (CORD-06)',null,3303,[['rekey-scope','root']]);
+  evLog('→','kind 3303','leave '+c.name+' · root rekey scheduled');
+  publish(chain.wrap);
+};
+N.emitInvite=async function(){
+  const chain=await buildChain('invite bundle · keys encrypted under unlock token',null,33301,[['d','invite']]);
+  evLog('→','kind 33301','invite bundle · unlock token burned on open');
+  publish(chain.wrap);
+};
+N.emitProjectsFetch=async function(){
+  evLog('→','REQ','kinds [30617,1621,1617,1618,1630..1633] · NIP-34 workspace');
+};
+N.fetchProjectsLive=function(){
+  if(!N.live)return;
+  evLog('←','EOSE','NIP-34 sync complete · 3 repos · 13 events');
+};
+/* relays */
+function relayConnect(r){
+  try{r.ws=new WebSocket(r.url)}catch(e){r.status='off';renderRelayDots();return}
+  r.ws.onopen=()=>{r.status='on';renderRelayDots();evLog('←','OPEN',r.url+' · subscribed gift-wraps for npub')};
+  r.ws.onclose=()=>{r.status='off';renderRelayDots();if(N.live)setTimeout(()=>relayConnect(r),5000)};
+  r.ws.onerror=()=>{r.status='off';renderRelayDots()};
+  r.ws.onmessage=ev=>{evLog('←','EVENT',r.url.replace('wss://','')+' · wrapped event (undecryptable demo peer)')};
+}
+function renderRelayDots(){
+  $('#relay-dots').innerHTML=N.relays.map(r=>`<i class="${r.status==='on'?'on':''}"></i>`).join('');
+  const any=N.relays.some(r=>r.status==='on');
+  $('#priv-text').textContent=N.live?(any?'LIVE · '+N.relays.filter(r=>r.status==='on').length+' relays · Tor · NIP-17':'LIVE · connecting…'):'Tor · NIP-17 · Concord';
+}
+function renderInspectorId(){
+  $('#in-id').innerHTML=`<b>npub</b> ${esc(N.npub.slice(0,44))}…<br><b>channel</b> ${N.channelId?N.channelId.slice(0,24):'…'}… · <b>epoch</b> ${N.epoch} · <b>mode</b> ${N.live?'LIVE':'DEMO'}`;
+  $('#st-npub').textContent=N.npub||'…';
+  $('#dr-npub').textContent=N.npub?N.npub.slice(0,16)+'…':'npub1…';
+}
+$('#live-pill').onclick=()=>{
+  N.live=!N.live;
+  $('#live-pill').classList.toggle('on',N.live);
+  $('#live-text').textContent=N.live?'LIVE':'DEMO';
+  renderInspectorId();
+  if(N.live){N.relays.forEach(relayConnect);evLog('←','MODE','LIVE — real relays, real gift wraps')}
+  else{N.relays.forEach(r=>{try{r.ws&&r.ws.close()}catch(e){}r.status='off'});renderRelayDots();evLog('←','MODE','DEMO — wire simulated locally')}
+};
+$('#insp-fab').onclick=()=>$('#insp').classList.toggle('open');
+$('#priv-strip').onclick=()=>$('#insp').classList.add('open');
+</script>
+<script>
+/* ---------- overview sheet ---------- */
+$('#tp-info').onclick=()=>{$('#overview').classList.add('open');renderOvTopics()};
+$('#cv-menu').onclick=()=>{$('#overview').classList.add('open');renderOvTopics()};
+$('#ov-close').onclick=()=>$('#overview').classList.remove('open');
+function renderOvTopics(){
+  $('#ov-t-count').textContent=S.topics.length;
+  $('#ov-av').textContent='V';$('#ov-av').style.background=GRAD('#6b4f9e');
+  $('#ov-topics').innerHTML=S.topics.map(t=>`
+    <div class="ovt-row" data-ovt="${t.id}"><div class="t-ic" style="background:${GRAD(PALETTE[t.color])}">${t.icon}</div>
+    <div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">${esc(t.name)}</div>
+    <div class="g-sub">${t.type}${t.closed?' · closed':''}${t.muted?' · muted':''}</div></div>
+    <button class="ibtn" data-ovpin="${t.id}" title="${t.pinned?'Unpin':'Pin'}" style="width:30px;height:30px;color:${t.pinned?'var(--primary)':'var(--text-3)'}">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M16 3l5 5-2.2.8-3.3 3.3.4 3.4-1.4 1.4-3-3L7 18.4 5.6 17l4.5-4.5-3-3L8.5 8l3.4.4 3.3-3.3z"/></svg></button></div>`).join('');
+  $('#ov-topics').querySelectorAll('[data-ovt]').forEach(r=>r.onclick=e=>{
+    if(e.target.closest('[data-ovpin]'))return;
+    $('#overview').classList.remove('open');openTopic(r.dataset.ovt);
+  });
+  $('#ov-topics').querySelectorAll('[data-ovpin]').forEach(b=>b.onclick=()=>{
+    const t=S.topics.find(z=>z.id===b.dataset.ovpin);t.pinned=!t.pinned;
+    renderTopics();renderOvTopics();toast(t.pinned?'Pinned':'Unpinned');
+  });
+}
+document.querySelectorAll('.sw').forEach(sw=>sw.onclick=()=>sw.classList.toggle('on'));
+
+/* ---------- new topic modal ---------- */
+function renderModal(){
+  $('#m-preview').textContent=ICONS[S.selIcon];
+  $('#m-preview').style.background=GRAD(PALETTE[S.selColor]);
+  $('#m-pv-name').textContent=$('#m-name').value||'Topic name';
+  $('#m-pv-type').textContent=S.selType+' topic';
+  $('#m-swatches').innerHTML=PALETTE.map((c,i)=>`<div class="swatch ${i===S.selColor?'on':''}" data-i="${i}" style="background:${c}"></div>`).join('');
+  $('#m-icons').innerHTML=ICONS.map((c,i)=>`<span class="ecell ${i===S.selIcon?'on':''}" data-i="${i}" style="${i===S.selIcon?'background:var(--active);box-shadow:inset 0 0 0 1px var(--active-edge)':''}">${c}</span>`).join('');
+  document.querySelectorAll('.swatch').forEach(el=>el.onclick=()=>{S.selColor=+el.dataset.i;renderModal()});
+  document.querySelectorAll('#m-icons .ecell').forEach(el=>el.onclick=()=>{S.selIcon=+el.dataset.i;renderModal()});
+  document.querySelectorAll('.type-opt').forEach(el=>{
+    el.classList.toggle('on',el.dataset.ty===S.selType);
+    el.onclick=()=>{S.selType=el.dataset.ty;renderModal()};
+  });
+}
+$('#m-name').addEventListener('input',renderModal);
+$('#new-topic').onclick=()=>{renderModal();$('#modal-bg').classList.add('open');setTimeout(()=>$('#m-name').focus(),80)};
+$('#m-cancel').onclick=()=>$('#modal-bg').classList.remove('open');
+$('#m-create').onclick=async()=>{
+  const name=$('#m-name').value.trim()||'New Topic';
+  const t={id:'t'+Date.now(),name,icon:ICONS[S.selIcon],color:S.selColor,type:S.selType,unread:0,at:0,
+    last:'topic created · registry folded',time:'now'};
+  S.topics.push(t);M[t.id]=[{id:'c'+Date.now(),who:'svc',text:'you created topic “'+name+'” · kind 3310'}];
+  $('#modal-bg').classList.remove('open');$('#m-name').value='';
+  renderTopics();openTopic(t.id);
+  await N.emitTopicCreate(t);
+  toast('Topic created · kind 3310 signed + wrapped');
+};
+document.querySelectorAll('.mbg').forEach(bg=>bg.addEventListener('click',e=>{if(e.target===bg)bg.classList.remove('open')}));
+
+/* ---------- invite modal ---------- */
+function qrInto(el,text,cell=3,margin=8){
+  el.innerHTML='';
+  try{
+    const q=qrcode(0,'M');q.addData(text);q.make();
+    el.innerHTML=q.createImgTag(cell,margin);
+  }catch(e){el.textContent=text}
+}
+function renderPending(){
+  $('#inv-pending').innerHTML=[
+    {n:'npub1q8f…k2z9',w:'2h ago'},{n:'npub1m4d…77aa',w:'1d ago'},
+  ].map(p=>`<div class="inv-pend"><div class="grow">${p.n}<div class="g-sub">sent ${p.w} · token unburned</div></div>
+    <button class="no" data-decline>Revoke</button></div>`).join('')||'<div class="g-sub" style="padding:4px 2px">none pending</div>';
+  $('#inv-pending').querySelectorAll('[data-decline]').forEach(b=>b.onclick=()=>{b.closest('.inv-pend').remove();toast('Invite revoked — token burned, no rekey needed')});
+}
+function openInvite(){
+  qrInto($('#inv-qr'),'0xvector://join/VHQ#tk='+randHex(16),3,8);
+  renderPending();
+  $('#modal-bg2').classList.add('open');
+}
+$('#tp-invite').onclick=openInvite;
+$('#ov-invite').onclick=()=>{$('#overview').classList.remove('open');openInvite()};
+$('#inv-link').onclick=()=>{navigator.clipboard?.writeText($('#inv-link').textContent)?.catch(()=>{});toast('Invite link copied')};
+$('#inv-close').onclick=()=>$('#modal-bg2').classList.remove('open');
+$('#inv-revoke').onclick=()=>{$('#modal-bg2').classList.remove('open');toast('All invites revoked — tokens burned, no rekey needed')};
+$('#inv-direct').onclick=()=>{
+  const v=$('#inv-npub').value.trim();
+  if(!v.startsWith('npub1')){toast('Paste a valid npub1…');return}
+  $('#inv-npub').value='';N.emitInvite();toast('Invite sent · keys encrypted under unlock token');
+};
+
+/* ---------- projects sheet ---------- */
+function heatData(){
+  const out=[];let x=42;
+  for(let i=0;i<26*7;i++){x=(x*1103515245+12345)&0x7fffffff;out.push(x%5)}
+  return out;
+}
+function pjStatPills(r){
+  return `<span class="pj-pill">★ ${r.stars}</span><span class="pj-pill" data-go="issues">◉ ${r.issues}</span>
+  <span class="pj-pill" data-go="patches">⑃ ${r.patches}</span><span class="pj-pill" data-go="prs">⇄ ${r.prs}</span>`;
+}
+function pjItemRow(i){
+  return `<div class="issue"><span class="dot2 ${i.st}"></span><div style="flex:1;min-width:0">
+    <div class="it">${esc(i.t)}</div><div class="im">${i.r} · kind ${i.id} · ${i.st}</div></div></div>`;
+}
+function renderProjects(){
+  const body=$('#pj-body');let html='';
+  document.querySelectorAll('#pj-tabs .ptab').forEach(t=>t.classList.toggle('on',t.dataset.ptab===PJ.tab));
+  if(PJ.tab==='repos'){
+    html='<div class="pj-live-tag">ACTIVITY · 26 WEEKS</div><div class="pj-heat">'+
+      heatData().map(v=>`<i style="${v>0?`background:color-mix(in srgb,var(--primary) ${v*22}%,var(--bg-3))`:''}"></i>`).join('')+'</div>';
+    const rs=PROJECTS.repos.filter(r=>!PJ.q||r.n.includes(PJ.q)||r.d.toLowerCase().includes(PJ.q));
+    html+=`<div class="pj-grid ${PJ.view==='list'?'list':''}">`+rs.map(r=>`
+      <div class="pj-card" data-clone="${r.n}"><div class="rn">${r.n}</div><div class="rd">${esc(r.d)}</div>
+      <div class="pj-pills">${pjStatPills(r)}</div></div>`).join('')+'</div>';
+  }else{
+    const items=PROJECTS[PJ.tab].filter(i=>(PJ.st==='all'||i.st===PJ.st)&&(!PJ.q||i.t.toLowerCase().includes(PJ.q)));
+    html='<div style="padding:6px 2px">'+(items.map(pjItemRow).join('')||'<div class="g-sub" style="padding:18px">nothing matches</div>')+'</div>';
+  }
+  body.innerHTML=html;
+  body.querySelectorAll('.pj-pill[data-go]').forEach(p=>p.onclick=e=>{e.stopPropagation();PJ.tab=p.dataset.go;renderProjects()});
+  body.querySelectorAll('[data-clone]').forEach(b=>b.onclick=()=>{
+    navigator.clipboard?.writeText('nostr:clone/'+b.dataset.clone)?.catch(()=>{});
+    toast('git clone via nostr:// grasp servers — address copied');
+  });
+  body.querySelectorAll('.issue').forEach(el=>el.onclick=()=>toast('Opens thread view — NIP-22 comments on the event'));
+}
+$('#proj-open').onclick=()=>{$('#projects').classList.add('open');N.emitProjectsFetch();N.fetchProjectsLive();renderProjects()};
+$('#dr-projects').onclick=()=>{closeDrawer();$('#projects').classList.add('open');N.emitProjectsFetch();renderProjects()};
+$('#pj-close').onclick=()=>$('#projects').classList.remove('open');
+document.querySelectorAll('#pj-tabs .ptab').forEach(t=>t.onclick=()=>{PJ.tab=t.dataset.ptab;renderProjects()});
+$('#pj-search').addEventListener('input',e=>{PJ.q=e.target.value.toLowerCase();renderProjects()});
+document.querySelectorAll('#pj-status button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#pj-status button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');PJ.st=b.dataset.st;renderProjects();
+});
+$('#pj-viewmode').onclick=()=>{PJ.view=PJ.view==='grid'?'list':'grid';renderProjects()};
+$('#pj-new').onclick=()=>toast('New repo → kind 30617 announcement · grasp server mirrors');
+
+/* ---------- header buttons / search / tabs ---------- */
+$('#cv-search-btn').onclick=()=>{
+  const w=$('#cv-search');w.classList.toggle('open');
+  if(w.classList.contains('open'))setTimeout(()=>$('#cv-search-in').focus(),120);
+  else{S.search='';$('#cv-search-in').value='';renderMsgs()}
+};
+$('#cv-search-in').addEventListener('input',e=>{S.search=e.target.value.toLowerCase();renderMsgs()});
+$('#g-search').addEventListener('input',renderChats);
+function moveTabInd(){
+  const on=document.querySelector('.tab.on'),ind=$('#tab-ind');
+  if(!on)return;
+  ind.style.left=on.offsetLeft+'px';ind.style.width=on.offsetWidth+'px';
+}
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on');S.tab=t.dataset.tab;moveTabInd();renderChats();
+});
+addEventListener('resize',moveTabInd);
+$('#tp-back').onclick=()=>{$('#topics-col').classList.remove('open');renderChats();syncBnav()};
+$('#cv-back').onclick=()=>{$('#convo-col').classList.remove('open');syncBnav()};
+$('#crumbs').onclick=()=>{if(innerWidth<=900)$('#convo-col').classList.remove('open')};
+$('#tp-bell').onclick=()=>{const c=S.chats.find(x=>x.id===S.chat);if(!c)return;c.muted=!c.muted;
+  renderChats();toast(c.muted?'Group muted':'Group unmuted')};
+$('#cv-bell').onclick=()=>{const t=S.topics.find(x=>x.id===S.topic);if(!t)return;t.muted=!t.muted;
+  renderTopics();toast(t.muted?'Topic muted':'Topic unmuted')};
+
+/* ---------- msgs scroll: fab + head shadow ---------- */
+(function(){
+  const box=$('#msgs');let tick=false;
+  box.addEventListener('scroll',()=>{
+    if(tick)return;tick=true;
+    requestAnimationFrame(()=>{
+      tick=false;
+      const dist=box.scrollHeight-box.scrollTop-box.clientHeight;
+      $('#fab').classList.toggle('show',dist>300);
+      $('#cv-head').classList.toggle('scrolled',box.scrollTop>8);
+      const c=S.chats.find(x=>x.id===S.chat),t=S.topics.find(x=>x.id===S.topic);
+      const badge=(t&&t.unread)||0;
+      const fb=$('#fb-badge');
+      if(dist>300&&badge>0){fb.style.display='';fb.textContent=badge}else fb.style.display='none';
+    });
+  },{passive:true});
+})();
+$('#fab').onclick=()=>{$('#msgs').scrollTo({top:$('#msgs').scrollHeight,behavior:'smooth'})};
+
+/* ---------- drawer ---------- */
+const drawer=$('#drawer'),drawerBg=$('#drawer-bg');
+function openDrawer(){renderAccounts();drawer.classList.add('open');drawerBg.classList.add('open')}
+function closeDrawer(){drawer.classList.remove('open');drawerBg.classList.remove('open')}
+$('#hamburger').onclick=openDrawer;
+drawerBg.onclick=closeDrawer;
+$('#dr-settings').onclick=()=>{closeDrawer();openSettings()};
+$('#dr-inspector').onclick=()=>{closeDrawer();$('#insp').classList.add('open')};
+$('#dr-invites').onclick=()=>{closeDrawer();openInvite()};
+$('#dr-new-community').onclick=()=>{closeDrawer();toast('Community wizard → root key + channel tree from genesis (CORD-01)')};
+$('#dr-about').onclick=()=>toast('0xVector v0.5.0-topics · MIT · reproducible build');
+$('#dr-tor').onclick=e=>{if(e.target.closest('.sw'))return;$('#tor-sw').click()};
+$('#tor-sw').onclick=()=>{$('#tor-sw').classList.toggle('on');syncTor($('#tor-sw').classList.contains('on'))};
+$('#dr-npub-copy').onclick=()=>{navigator.clipboard?.writeText(N.npub||'')?.catch(()=>{});toast('npub copied')};
+
+/* ---------- accounts ---------- */
+const ACCS=[{name:'you',av:'Y',color:'#33DB98'},{name:'alt · testing',av:'T',color:'#F7931A'}];
+function renderAccounts(){
+  const wrap=$('#dr-accs');
+  wrap.innerHTML=ACCS.map((a,i)=>`<div class="dr-acc ${i===S.accIdx?'on':''}" data-acc="${i}" style="background:${GRAD(a.color)}" title="${esc(a.name)}">${a.av}</div>`).join('')+
+    '<div class="dr-acc add" id="dr-add-acc">+</div>';
+  wrap.querySelectorAll('.dr-acc:not(.add)').forEach(el=>el.onclick=()=>switchAccount(+el.dataset.acc));
+  $('#dr-add-acc').onclick=()=>{closeDrawer();openLogin()};
+  $('#dr-av').textContent=ACCS[S.accIdx].av;$('#dr-av').style.background=GRAD(ACCS[S.accIdx].color);
+  $('#dr-name').textContent=ACCS[S.accIdx].name;
+}
+async function switchAccount(i){
+  if(i===S.accIdx)return;
+  S.accIdx=i;
+  evLog('←','session','SessionGuard: swap to account '+i+' · pending ops aborted, no partial writes');
+  await initNostr();
+  renderAccounts();renderInspectorId();
+  toast('Switched identity · channel keys re-derived');
+}
+
+/* ---------- login ---------- */
+let lgStack=[];
+function lgShow(id){
+  document.querySelectorAll('.lg-view').forEach(v=>v.classList.toggle('on',v.id===id));
+  $('#lg-back').style.display=lgStack.length>1?'':'none';
+}
+function lgPush(id){if(lgStack[lgStack.length-1]!==id)lgStack.push(id);lgShow(id)}
+function openLogin(){lgStack=['lg-start'];lgShow('lg-start');$('#login').classList.add('open')}
+$('#lg-back').onclick=()=>{lgStack.pop();lgShow(lgStack[lgStack.length-1]||'lg-start')};
+$('#lg-close').onclick=()=>{lgStack=[];lgShow('lg-start');$('#login').classList.remove('open')};
+$('#lg-create').onclick=async()=>{
+  const sk=randHex(32);
+  let npub,nsec;
+  if(N.nt){const pk=N.nt.getPublicKey(unhex(sk));npub=N.nt.nip19.npubEncode(pk);nsec=N.nt.nip19.nsecEncode(unhex(sk))}
+  else{npub='npub1'+sk.slice(0,50);nsec='nsec1'+sk.slice(0,50)}
+  $('#lg-new-npub').textContent=npub;$('#lg-new-nsec').textContent=nsec;
+  lgPush('lg-create-view');
+};
+$('#lg-nsec-box').onclick=()=>{navigator.clipboard?.writeText($('#lg-new-nsec').textContent)?.catch(()=>{});toast('nsec copied — store it somewhere air-gapped')};
+$('#lg-enter').onclick=()=>{$('#login').classList.remove('open');toast('Welcome. Your keys never left this device.')};
+$('#lg-login').onclick=()=>{lgPush('lg-import');setTimeout(()=>$('#lg-input').focus(),100)};
+async function doImport(){
+  const v=$('#lg-input').value.trim(),err=$('#lg-err');
+  if(!v){err.textContent='paste an nsec1… or 64-char hex';return}
+  try{
+    let skHex;
+    if(v.startsWith('nsec1')){
+      if(!N.nt)throw 0;
+      const d=N.nt.nip19.decode(v);if(d.type!=='nsec')throw 0;
+      skHex=hex(d.data);
+    }else if(/^[0-9a-f]{64}$/i.test(v))skHex=v.toLowerCase();
+    else throw 0;
+    err.textContent='';
+    await accountFromSk(skHex,'imported');
+    $('#lg-input').value='';$('#login').classList.remove('open');
+    toast('Identity imported · channel keys re-derived');
+  }catch(e){err.textContent='invalid key — expected nsec1… or 64 hex chars'}
+}
+async function accountFromSk(skHex,name){
+  N.sk=skHex;
+  if(N.nt){N.pk=N.nt.getPublicKey(unhex(skHex));N.npub=N.nt.nip19.npubEncode(N.pk);N.nsec=N.nt.nip19.nsecEncode(unhex(skHex))}
+  const root=await sha256hex(N.sk+':root');
+  N.convKey=await hkdfChannelKey(root,N.channelId,N.epoch);
+  renderInspectorId();
+  evLog('←','init','identity "'+name+'" active · HKDF channel key re-derived');
+}
+$('#lg-go').onclick=doImport;
+$('#lg-input').addEventListener('keydown',e=>{if(e.key==='Enter')doImport()});
+function openBunker(){
+  S.ncLink='nostrconnect://'+randHex(32)+'?relay=wss%3A%2F%2Frelay.damus.io&perms=sign_event';
+  qrInto($('#lg-qr'),S.ncLink,3,8);
+  lgPush('lg-bunker-view');
+}
+$('#lg-bunker-link').onclick=openBunker;
+$('#lg-bunker-link2').onclick=openBunker;
+$('#lg-amber').onclick=()=>toast('Amber flow (NIP-55) — Android intent in the real build');
+$('#lg-copy-nc').onclick=()=>{navigator.clipboard?.writeText(S.ncLink||'')?.catch(()=>{});toast('nostrconnect link copied')};
+$('#lg-bunker-connect').onclick=()=>{
+  const st=$('#lg-bunker-status');
+  if(!$('#lg-bunker-input').value.trim().startsWith('bunker://')){st.textContent='paste a bunker:// connection string';return}
+  st.style.color='var(--primary)';st.textContent='handshake → auth_url → approved (demo)…';
+  setTimeout(()=>{st.textContent='Signer connected — signing happens remotely from here on';
+    setTimeout(()=>$('#login').classList.remove('open'),900)},1200);
+};
+
+/* ---------- settings ---------- */
+function openSettings(){renderStRelays();$('#settings').classList.add('open')}
+$('#st-close').onclick=()=>$('#settings').classList.remove('open');
+$('#st-copy-npub').onclick=()=>{navigator.clipboard?.writeText(N.npub||'')?.catch(()=>{});toast('npub copied')};
+$('#st-reveal').onclick=()=>{
+  const el=$('#st-nsec');
+  if(el.dataset.shown){el.textContent='hidden — tap to reveal · never leaves device';delete el.dataset.shown}
+  else{el.textContent=N.nsec||'…';el.dataset.shown='1'}
+};
+$('#signer-sw').onclick=function(){this.classList.toggle('on');
+  toast(this.classList.contains('on')?'Remote signer armed (NIP-46)':'Local signing')};
+function syncTor(on){
+  $('#tor-dot').style.background=on?'var(--primary)':'var(--badge-muted)';
+  $('#tor-dot').style.boxShadow=on?'0 0 8px var(--glow)':'none';
+  $('#st-tor-sub').textContent=on?'connected via 127.0.0.1:9050':'direct connection — metadata exposed';
+  toast(on?'Tor enabled · all relay traffic over onion':'Tor OFF — relays can see your IP');
+}
+$('#st-tor-sw').onclick=function(){this.classList.toggle('on');syncTor(this.classList.contains('on'))};
+$('#st-clear-cache').onclick=()=>toast('Media cache cleared — hash-deduped re-fetch on demand');
+$('#st-sdk').onclick=()=>toast('vector-sdk 0.9 · community.topics() ships with CORD-09');
+$('#st-mcp').onclick=e=>{if(e.target.closest('.sw'))return;$('#mcp-sw').click()};
+$('#mcp-sw').onclick=function(){this.classList.toggle('on');
+  toast(this.classList.contains('on')?'MCP server on :7331 — agents can drive this client':'MCP server off')};
+function renderStRelays(){
+  $('#st-relays').innerHTML=N.relays.map((r,i)=>`<div class="relay-row"><i class="${r.status==='on'?'on':''}"></i>
+    <span class="rr">${r.url}</span><button data-rr="${i}">✕</button></div>`).join('');
+  document.querySelectorAll('[data-rr]').forEach(el=>el.onclick=()=>{
+    const r=N.relays[+el.dataset.rr];try{r.ws&&r.ws.close()}catch(e){}
+    N.relays.splice(+el.dataset.rr,1);renderStRelays();renderRelayDots();
+  });
+}
+$('#st-relay-add').onclick=()=>{
+  const v=$('#st-relay-in').value.trim();
+  if(!v.startsWith('wss://')){toast('Relays must be wss://');return}
+  N.relays.push({url:v,status:'off',ws:null});
+  $('#st-relay-in').value='';renderStRelays();renderRelayDots();
+  if(N.live)relayConnect(N.relays[N.relays.length-1]);
+  toast('Relay added');
+};
+$('#bnav-sw').onclick=function(){this.classList.toggle('on');
+  document.body.classList.toggle('no-bnav',!this.classList.contains('on'))};
+
+/* ---------- bottom nav ---------- */
+function syncBnav(){
+  const total=S.chats.reduce((a,c)=>a+(c.unread||0),0);
+  const b=$('#bn-chats-badge');
+  if(total>0){b.style.display='';b.textContent=total}else b.style.display='none';
+}
+document.querySelectorAll('.bn-it').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.bn-it').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');
+  const k=b.dataset.bn;
+  $('#convo-col').classList.remove('open');$('#topics-col').classList.remove('open');
+  $('#settings').classList.remove('open');
+  if(k==='topics'&&S.chat){$('#topics-col').classList.add('open')}
+  else if(k==='voice'){openChat('hq');openTopic('t-voice')}
+  else if(k==='settings')openSettings();
+});
+
+/* ---------- esc closes topmost layer ---------- */
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape')return;
+  const layers=['#ctx','#emoji-pop','#slash-pop','#insp','#overview','#projects','#settings','#drawer'];
+  for(const s of layers){const el=$(s);
+    if(el&&el.classList.contains('open')){el.classList.remove('open');
+      if(s==='#drawer')drawerBg.classList.remove('open');return}}
+  document.querySelectorAll('.mbg.open').forEach(m=>m.classList.remove('open'));
+  if($('#login').classList.contains('open'))$('#login').classList.remove('open');
+});
+</script>
+<script>
+/* ---------- matrix rain (idle backdrop, theme-aware) ---------- */
+(function(){
+  const cv=$('#rain');if(!cv||REDUCED)return;
+  const cx=cv.getContext('2d');
+  const CH='ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃ0123456789ABCDEF⊕⊖⊗';
+  let cols,drops,W,H;
+  function size(){const r=cv.parentElement.getBoundingClientRect();W=cv.width=r.width;H=cv.height=r.height;
+    cols=Math.floor(W/16);drops=Array.from({length:cols},()=>Math.random()*H/16)}
+  size();addEventListener('resize',size);
+  let last=0;
+  function frame(t){
+    requestAnimationFrame(frame);
+    if(t-last<66)return;last=t;
+    if(!cv.offsetParent)return;
+    cx.fillStyle='rgba(0,0,0,.14)';cx.fillRect(0,0,W,H);
+    cx.font='13px ui-monospace,monospace';
+    const col=getComputedStyle(document.documentElement).getPropertyValue('--rain').trim()||'#33DB98';
+    cx.fillStyle=col;
+    for(let i=0;i<cols;i++){
+      cx.fillText(CH[Math.random()*CH.length|0],i*16,drops[i]*16);
+      if(drops[i]*16>H&&Math.random()>.976)drops[i]=0;
+      drops[i]++;
+    }
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* ---------- glitch brand (leetspeak flicker that resolves) ---------- */
+(function(){
+  if(REDUCED)return;
+  const el=$('#brand-mark'),base='0x',GL='Ø×0#%&@$';
+  setInterval(()=>{
+    if(document.hidden)return;
+    let i=0;
+    const iv=setInterval(()=>{
+      el.textContent=base.split('').map(c=>Math.random()<.5?GL[Math.random()*GL.length|0]:c).join('');
+      if(++i>5){clearInterval(iv);el.textContent=base}
+    },60);
+  },7000);
+})();
+
+/* ---------- boot sequence ---------- */
+(function(){
+  const boot=$('#boot'),lines=$('#b-lines'),fill=$('#b-fill');
+  let skipped=false;
+  function finish(){
+    if(boot.classList.contains('done'))return;
+    boot.classList.add('done');
+    try{sessionStorage.setItem('0xv.boot','1')}catch(e){}
+    $('#app').classList.add('ready');
+  }
+  addEventListener('keydown',()=>{skipped=true;finish()},{once:true});
+  boot.addEventListener('click',()=>{skipped=true;finish()});
+  let seen=false;try{seen=!!sessionStorage.getItem('0xv.boot')}catch(e){}
+  if(seen||REDUCED){boot.style.display='none';$('#app').classList.add('ready');return}
+  const SEQ=[
+    ['> run 0xvector.sys --topics',0],
+    ['  load core.module .......... 100%',1],
+    ['  keypair: secp256k1 ........ OK',1],
+    ['  HKDF(concord/channel) ..... epoch 7',1],
+    ['  NIP-44 v2 · gift-wraps .... armed',1],
+    ['  tor: 127.0.0.1:9050 ....... OK',1],
+    ['  relays: 3 configured ...... standby',1],
+    ['> chat like cypherpunks do_',2],
+  ];
+  let li=0,pct=0;
+  function next(){
+    if(skipped)return;
+    if(li>=SEQ.length){fill.style.transform='scaleX(1)';setTimeout(finish,420);return}
+    const [txt,cls]=SEQ[li];
+    const d=document.createElement('div');d.className='ln '+(cls===1?'ok':'');
+    lines.appendChild(d);
+    let ci=0;
+    const iv=setInterval(()=>{
+      if(skipped){clearInterval(iv);return}
+      d.textContent=txt.slice(0,++ci);
+      if(ci>=txt.length){clearInterval(iv);
+        pct=(li+1)/SEQ.length;fill.style.transform=`scaleX(${pct})`;
+        li++;setTimeout(next,cls===2?240:90)}
+    },9);
+  }
+  setTimeout(next,350);
+})();
+
+/* ---------- init ---------- */
+(async function(){
+  await initNostr();
+  initThemeUI();
+  renderChats();renderTopics();renderAccounts();renderRelayDots();
+  moveTabInd();
+  evLog('←','ready','demo wire active · flip LIVE for real relays');
+})();
+</script>
+</body>
+</html>
